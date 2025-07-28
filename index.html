@@ -63,6 +63,9 @@
       background: #388e3c;
     }
   </style>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 </head>
 <body>
   <header>
@@ -107,8 +110,28 @@
   </div>
 
   <script>
-    let products = JSON.parse(localStorage.getItem('products') || '[]');
+    const firebaseConfig = {
+      apiKey: "AIzaSyAKp7o0HzRioOELQZwRU7WKkdmWFLtwyuY",
+      authDomain: "sachin-bda88.firebaseapp.com",
+      databaseURL: "https://sachin-bda88-default-rtdb.firebaseio.com",
+      projectId: "sachin-bda88",
+      storageBucket: "sachin-bda88.appspot.com",
+      messagingSenderId: "371431713702",
+      appId: "1:371431713702:web:8ccbc31a741dae58433d67"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let products = [];
     let selectedProduct = null;
+
+    // Fetch products from Firebase on load
+    firebase.database().ref('products').on('value', (snapshot) => {
+      products = snapshot.val() || [];
+      showUserProducts(); // Also updates user panel when new data comes
+      showAdminProducts(); // Also updates admin view
+    });
 
     function adminLogin() {
       const id = document.getElementById('adminId').value;
@@ -116,7 +139,6 @@
       if (id === 'Sachin' && pass === '802165') {
         document.getElementById('loginPanel').style.display = 'none';
         document.getElementById('adminPanel').style.display = 'block';
-        showAdminProducts();
       } else {
         alert('Invalid Credentials');
       }
@@ -129,7 +151,6 @@
     function openUserPanel() {
       document.getElementById('loginPanel').style.display = 'none';
       document.getElementById('userPanel').style.display = 'block';
-      showUserProducts();
     }
 
     function addProduct() {
@@ -146,9 +167,11 @@
         reader.onload = function (e) {
           images.push(e.target.result);
           if (images.length === files.length) {
-            products.push({ title, description, affiliateLink, images });
-            localStorage.setItem('products', JSON.stringify(products));
-            showAdminProducts();
+            const newProduct = { title, description, affiliateLink, images };
+            products.push(newProduct);
+            // Save to Firebase
+            firebase.database().ref('products').set(products);
+            alert('Product Added to Firebase!');
           }
         };
         reader.readAsDataURL(file);
@@ -170,8 +193,7 @@
 
     function deleteProduct(i) {
       products.splice(i, 1);
-      localStorage.setItem('products', JSON.stringify(products));
-      showAdminProducts();
+      firebase.database().ref('products').set(products);
     }
 
     function showUserProducts() {
