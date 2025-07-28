@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SGS Product Shop</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+    header {
+      background-color: #4caf50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    #adminPanel, #userPanel, #productDetail {
+      display: none;
+      padding: 20px;
+    }
+    #productList {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .product {
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      width: 200px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .product img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+    .slider {
+      display: flex;
+      overflow-x: auto;
+    }
+    .slider img {
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .buttons {
+      margin-top: 10px;
+    }
+    button {
+      padding: 8px 12px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      background: #4caf50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #388e3c;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SGS PRODUCT SHOP</h1>
+  </header>
+
+  <div id="loginPanel">
+    <h2>Admin Login</h2>
+    <input type="text" id="adminId" placeholder="Admin ID" />
+    <input type="password" id="adminPass" placeholder="Password" />
+    <button onclick="adminLogin()">Login</button>
+    <hr />
+    <h2>User Access</h2>
+    <button onclick="openUserPanel()">SHOPPING NOW</button>
+  </div>
+
+  <div id="adminPanel">
+    <h2>Admin Panel</h2>
+    <input type="text" id="productTitle" placeholder="Product Title" /><br />
+    <textarea id="productDescription" placeholder="Description"></textarea><br />
+    <input type="text" id="affiliateLink" placeholder="Affiliate Buy Link" /><br />
+    <input type="file" id="productImages" multiple accept="image/*" /><br />
+    <button onclick="addProduct()">Add Product</button>
+    <div id="adminProductList"></div>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <div id="userPanel">
+    <h2>All Products</h2>
+    <div id="productList"></div>
+  </div>
+
+  <div id="productDetail">
+    <h2 id="detailTitle"></h2>
+    <div class="slider" id="detailImages"></div>
+    <p id="detailDescription"></p>
+    <div class="buttons">
+      <button onclick="alert('Added to cart (coming soon)')">Add to Cart</button>
+      <button id="buyNowBtn">Buy Now</button>
+      <button onclick="backToShop()">Back</button>
+    </div>
+  </div>
+
+  <script>
+    let products = JSON.parse(localStorage.getItem('products') || '[]');
+    let selectedProduct = null;
+
+    function adminLogin() {
+      const id = document.getElementById('adminId').value;
+      const pass = document.getElementById('adminPass').value;
+      if (id === 'Sachin' && pass === '802165') {
+        document.getElementById('loginPanel').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        showAdminProducts();
+      } else {
+        alert('Invalid Credentials');
+      }
+    }
+
+    function logout() {
+      location.reload();
+    }
+
+    function openUserPanel() {
+      document.getElementById('loginPanel').style.display = 'none';
+      document.getElementById('userPanel').style.display = 'block';
+      showUserProducts();
+    }
+
+    function addProduct() {
+      const title = document.getElementById('productTitle').value;
+      const description = document.getElementById('productDescription').value;
+      const affiliateLink = document.getElementById('affiliateLink').value;
+      const files = document.getElementById('productImages').files;
+
+      if (!title || !affiliateLink || files.length === 0) return alert('All fields required');
+
+      const images = [];
+      for (let file of files) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          images.push(e.target.result);
+          if (images.length === files.length) {
+            products.push({ title, description, affiliateLink, images });
+            localStorage.setItem('products', JSON.stringify(products));
+            showAdminProducts();
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function showAdminProducts() {
+      const container = document.getElementById('adminProductList');
+      container.innerHTML = '';
+      products.forEach((product, index) => {
+        container.innerHTML += `
+          <div class="product">
+            <img src="${product.images[0]}" />
+            <h4>${product.title}</h4>
+            <button onclick="deleteProduct(${index})">Delete</button>
+          </div>`;
+      });
+    }
+
+    function deleteProduct(i) {
+      products.splice(i, 1);
+      localStorage.setItem('products', JSON.stringify(products));
+      showAdminProducts();
+    }
+
+    function showUserProducts() {
+      const container = document.getElementById('productList');
+      container.innerHTML = '';
+      products.forEach((product, index) => {
+        container.innerHTML += `
+          <div class="product" onclick="viewDetail(${index})">
+            <img src="${product.images[0]}" />
+            <h4>${product.title}</h4>
+          </div>`;
+      });
+    }
+
+    function viewDetail(index) {
+      selectedProduct = products[index];
+      document.getElementById('userPanel').style.display = 'none';
+      document.getElementById('productDetail').style.display = 'block';
+      document.getElementById('detailTitle').innerText = selectedProduct.title;
+      document.getElementById('detailDescription').innerText = selectedProduct.description;
+
+      const imgContainer = document.getElementById('detailImages');
+      imgContainer.innerHTML = '';
+      selectedProduct.images.forEach(img => {
+        imgContainer.innerHTML += `<img src="${img}" />`;
+      });
+
+      document.getElementById('buyNowBtn').onclick = () => {
+        window.open(selectedProduct.affiliateLink, '_blank');
+      };
+    }
+
+    function backToShop() {
+      document.getElementById('productDetail').style.display = 'none';
+      document.getElementById('userPanel').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
