@@ -5,17 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SGS Product Shop</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
-      background: #f5f5f5;
+      background: #f1f3f6;
     }
     header {
-      background-color: #4caf50;
+      background-color: #232f3e;
       color: white;
-      padding: 15px;
+      padding: 15px 20px;
       text-align: center;
+      font-size: 24px;
+      font-weight: bold;
     }
     #adminPanel, #userPanel, #productDetail {
       display: none;
@@ -24,52 +29,81 @@
     #productList {
       display: flex;
       flex-wrap: wrap;
-      gap: 15px;
+      gap: 20px;
+      justify-content: center;
     }
     .product {
       background: white;
       padding: 10px;
       border-radius: 10px;
-      width: 200px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: 230px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+    .product:hover {
+      transform: scale(1.03);
     }
     .product img {
       width: 100%;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 5px;
+      height: 200px;
+      object-fit: contain;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
     }
     .slider {
       display: flex;
       overflow-x: auto;
+      gap: 10px;
     }
     .slider img {
       width: 100%;
+      max-height: 250px;
       flex-shrink: 0;
     }
     .buttons {
-      margin-top: 10px;
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
     }
     button {
-      padding: 8px 12px;
-      margin: 5px;
+      padding: 10px 16px;
       border: none;
       border-radius: 5px;
-      background: #4caf50;
-      color: white;
+      background: #f0c14b;
+      color: #111;
       cursor: pointer;
+      font-weight: bold;
     }
     button:hover {
-      background: #388e3c;
+      background: #ddb347;
+    }
+    input, textarea {
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    #productDetail img {
+      max-width: 100%;
+      max-height: 250px;
+    }
+    #loginPanel, #adminPanel, #userPanel, #productDetail {
+      animation: fadeIn 0.5s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
   </style>
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 </head>
 <body>
   <header>
-    <h1>SGS PRODUCT SHOP</h1>
+    SGS PRODUCT SHOP
   </header>
 
   <div id="loginPanel">
@@ -119,18 +153,15 @@
       messagingSenderId: "371431713702",
       appId: "1:371431713702:web:8ccbc31a741dae58433d67"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
     let products = [];
     let selectedProduct = null;
 
-    // Fetch products from Firebase on load
     firebase.database().ref('products').on('value', (snapshot) => {
       products = snapshot.val() || [];
-      showUserProducts(); // Also updates user panel when new data comes
-      showAdminProducts(); // Also updates admin view
+      showUserProducts();
+      showAdminProducts();
     });
 
     function adminLogin() {
@@ -158,7 +189,6 @@
       const description = document.getElementById('productDescription').value;
       const affiliateLink = document.getElementById('affiliateLink').value;
       const files = document.getElementById('productImages').files;
-
       if (!title || !affiliateLink || files.length === 0) return alert('All fields required');
 
       const images = [];
@@ -169,9 +199,8 @@
           if (images.length === files.length) {
             const newProduct = { title, description, affiliateLink, images };
             products.push(newProduct);
-            // Save to Firebase
             firebase.database().ref('products').set(products);
-            alert('Product Added to Firebase!');
+            alert('Product Added');
           }
         };
         reader.readAsDataURL(file);
@@ -214,13 +243,11 @@
       document.getElementById('productDetail').style.display = 'block';
       document.getElementById('detailTitle').innerText = selectedProduct.title;
       document.getElementById('detailDescription').innerText = selectedProduct.description;
-
       const imgContainer = document.getElementById('detailImages');
       imgContainer.innerHTML = '';
       selectedProduct.images.forEach(img => {
         imgContainer.innerHTML += `<img src="${img}" />`;
       });
-
       document.getElementById('buyNowBtn').onclick = () => {
         window.open(selectedProduct.affiliateLink, '_blank');
       };
@@ -230,6 +257,13 @@
       document.getElementById('productDetail').style.display = 'none';
       document.getElementById('userPanel').style.display = 'block';
     }
+
+    window.onpopstate = function () {
+      if (document.getElementById('productDetail').style.display === 'block') {
+        backToShop();
+        history.pushState({}, '');
+      }
+    };
   </script>
 </body>
 </html>
