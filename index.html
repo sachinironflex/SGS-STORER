@@ -21,6 +21,29 @@
       text-align: center;
       font-size: 24px;
       font-weight: bold;
+      position: relative;
+    }
+    .top-right-controls {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 10px;
+    }
+    .top-right-controls input {
+      padding: 5px 10px;
+      border-radius: 5px;
+      border: none;
+      font-size: 14px;
+    }
+    .top-right-controls button {
+      background: #f0c14b;
+      padding: 6px 12px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
     #adminPanel, #userPanel, #productDetail {
       display: none;
@@ -104,6 +127,10 @@
 <body>
   <header>
     SGS PRODUCT SHOP
+    <div class="top-right-controls">
+      <input type="text" id="searchInput" placeholder="Search Product..." oninput="filterProducts()" />
+      <button onclick="viewCart()">View My Cart</button>
+    </div>
   </header>
 
   <div id="loginPanel">
@@ -137,7 +164,7 @@
     <div class="slider" id="detailImages"></div>
     <p id="detailDescription"></p>
     <div class="buttons">
-      <button onclick="alert('Added to cart (coming soon)')">Add to Cart</button>
+      <button onclick="addToCart()">Add to Cart</button>
       <button id="buyNowBtn">Buy Now</button>
       <button onclick="backToShop()">Back</button>
     </div>
@@ -157,6 +184,7 @@
     const db = firebase.database();
     let products = [];
     let selectedProduct = null;
+    let cart = [];
 
     firebase.database().ref('products').on('value', (snapshot) => {
       products = snapshot.val() || [];
@@ -225,10 +253,10 @@
       firebase.database().ref('products').set(products);
     }
 
-    function showUserProducts() {
+    function showUserProducts(filtered = products) {
       const container = document.getElementById('productList');
       container.innerHTML = '';
-      products.forEach((product, index) => {
+      filtered.forEach((product, index) => {
         container.innerHTML += `
           <div class="product" onclick="viewDetail(${index})">
             <img src="${product.images[0]}" />
@@ -256,6 +284,23 @@
     function backToShop() {
       document.getElementById('productDetail').style.display = 'none';
       document.getElementById('userPanel').style.display = 'block';
+    }
+
+    function addToCart() {
+      cart.push(selectedProduct);
+      alert("Product added to cart!");
+    }
+
+    function viewCart() {
+      if (cart.length === 0) return alert("Cart is empty!");
+      let html = cart.map((p, i) => `${i + 1}. ${p.title}`).join('\n');
+      alert("Your Cart:\n\n" + html);
+    }
+
+    function filterProducts() {
+      const search = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = products.filter(p => p.title.toLowerCase().includes(search));
+      showUserProducts(filtered);
     }
 
     window.onpopstate = function () {
