@@ -30,12 +30,17 @@
       transform: translateY(-50%);
       display: flex;
       gap: 10px;
+      align-items: center;
     }
     .top-right-controls input {
       padding: 5px 10px;
       border-radius: 5px;
       border: none;
       font-size: 14px;
+      display: none;
+    }
+    .top-right-controls input.show {
+      display: inline-block;
     }
     .top-right-controls button {
       background: #f0c14b;
@@ -43,6 +48,13 @@
       font-weight: bold;
       border: none;
       border-radius: 5px;
+      cursor: pointer;
+    }
+    .search-icon {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
       cursor: pointer;
     }
     #adminPanel, #userPanel, #productDetail {
@@ -128,6 +140,7 @@
   <header>
     SGS PRODUCT SHOP
     <div class="top-right-controls">
+      <button class="search-icon" onclick="toggleSearch()">🔍</button>
       <input type="text" id="searchInput" placeholder="Search Product..." oninput="filterProducts()" />
       <button onclick="viewCart()">View My Cart</button>
     </div>
@@ -279,6 +292,7 @@
       document.getElementById('buyNowBtn').onclick = () => {
         window.open(selectedProduct.affiliateLink, '_blank');
       };
+      history.pushState({}, ''); // enable back button tracking
     }
 
     function backToShop() {
@@ -301,6 +315,14 @@
       const search = document.getElementById("searchInput").value.toLowerCase();
       const filtered = products.filter(p => p.title.toLowerCase().includes(search));
       showUserProducts(filtered);
+    }
+
+    function toggleSearch() {
+      const input = document.getElementById('searchInput');
+      input.classList.toggle('show');
+      if (input.classList.contains('show')) {
+        input.focus();
+      }
     }
 
     window.onpopstate = function () {
