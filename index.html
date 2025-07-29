@@ -37,6 +37,40 @@
       justify-content: center;
       align-items: center;
     }
+    /* New: User info and logout button in header */
+    .header-user-info {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+        font-size: 0.9em;
+        display: none; /* Hidden by default */
+    }
+    .header-user-info img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%; /* Circular image */
+        border: 2px solid #f0c14b; /* Highlight border */
+        object-fit: cover;
+    }
+    .header-user-info button {
+        background: #dc3545; /* Red for logout */
+        color: white;
+        padding: 5px 10px;
+        font-size: 0.8em;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .header-user-info button:hover {
+        background: #c82333;
+    }
+
     .top-right-controls {
       position: absolute;
       right: 30px; /* More spacing from edge */
@@ -158,7 +192,7 @@
       transform: translateY(-2px); /* More pronounced lift */
       box-shadow: 0 6px 15px rgba(0,0,0,0.15); /* Stronger shadow on hover */
     }
-    /* Specific style for Login button */
+    /* Specific style for Admin Login button */
     #loginPanel button[onclick="adminLogin()"] {
       background: #f0c14b; /* Amazon-like yellow-orange */
       color: #111; /* Dark text for contrast */
@@ -176,7 +210,66 @@
     #loginPanel button[onclick="openUserPanel()"]:hover {
       background: #e68a00; /* Darker orange on hover */
     }
-
+    /* Styles for new user login buttons */
+    #loginPanel .user-auth-section {
+        width: 100%;
+        max-width: 350px;
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px; /* Space between auth buttons */
+    }
+    #loginPanel .user-auth-section button {
+        background-color: #4285F4; /* Google Blue */
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 20px;
+        font-size: 1em; /* Slightly smaller for multiple options */
+        border-radius: 5px; /* Standard button corners */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    #loginPanel .user-auth-section button:hover {
+        background-color: #357ae8;
+        transform: translateY(-1px);
+    }
+    #loginPanel .user-auth-section button.apple-btn {
+        background-color: #000; /* Apple Black */
+        color: white;
+    }
+    #loginPanel .user-auth-section button.apple-btn:hover {
+        background-color: #333;
+    }
+    #loginPanel .user-auth-section button.anonymous-btn {
+        background-color: #6c757d; /* Grey for anonymous */
+        color: white;
+    }
+    #loginPanel .user-auth-section button.anonymous-btn:hover {
+        background-color: #5a6268;
+    }
+    #loginPanel .auth-separator {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        max-width: 350px;
+        margin: 20px 0;
+        color: #888;
+    }
+    #loginPanel .auth-separator::before,
+    #loginPanel .auth-separator::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #ddd;
+    }
+    #loginPanel .auth-separator:not(:empty)::before {
+        margin-right: .25em;
+    }
+    #loginPanel .auth-separator:not(:empty)::after {
+        margin-left: .25em;
+    }
 
     /* User Panel (Home Page) Styling */
     #userPanel {
@@ -492,13 +585,33 @@
       #detailTitle {
         font-size: 2em;
       }
+      .header-user-info { /* Adjust for mobile */
+          left: 10px;
+          gap: 5px;
+          font-size: 0.8em;
+      }
+      .header-user-info img {
+          width: 30px;
+          height: 30px;
+      }
+      .header-user-info button {
+          padding: 3px 6px;
+          font-size: 0.7em;
+      }
     }
   </style>
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script> <!-- Added Firebase Auth SDK -->
 </head>
 <body>
   <header>
+    <div class="header-user-info" id="headerUserInfo">
+        <img id="userProfilePic" src="" alt="User Profile" style="display:none;">
+        <span id="userNameDisplay" style="display:none;"></span>
+        <button onclick="logout()">Logout</button>
+    </div>
     SGS PRODUCT SHOP
     <div class="top-right-controls">
       <button class="search-icon" onclick="toggleSearch()">
@@ -517,8 +630,25 @@
     <input type="password" id="adminPass" placeholder="Password" />
     <button onclick="adminLogin()">Login</button>
     <hr />
-    <h2>User Access</h2>
-    <button onclick="openUserPanel()">SHOP NOW</button>
+    <h2>User Login / Sign Up</h2>
+    <input type="email" id="userEmail" placeholder="Email" />
+    <input type="password" id="userPassword" placeholder="Password" />
+    <button onclick="userLogin()">Login</button>
+    <button onclick="userSignUp()" style="background:#28a745;">Sign Up</button> <!-- Green for Sign Up -->
+
+    <div class="auth-separator">OR</div>
+
+    <div class="user-auth-section">
+        <button onclick="signInWithGoogle()">
+            <i class="fab fa-google"></i> Login with Google
+        </button>
+        <button onclick="signInWithApple()" class="apple-btn">
+            <i class="fab fa-apple"></i> Login with Apple
+        </button>
+        <button onclick="signInAnonymouslyUser()" class="anonymous-btn">
+            <i class="fas fa-user-secret"></i> Continue Anonymously
+        </button>
+    </div>
   </div>
 
   <div id="adminPanel">
@@ -556,6 +686,7 @@
   </div>
 
   <script>
+    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAKp7o0HzRioOELQZwRU7WKkdmWFLtwyuY",
       authDomain: "sachin-bda88.firebaseapp.com",
@@ -567,16 +698,90 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    const auth = firebase.auth(); // Initialize Firebase Authentication
+
     let products = [];
     let selectedProduct = null;
     let cart = [];
+    let currentUser = null; // To store the currently authenticated user
+    let userCartRef = null; // Reference to the user-specific cart in Firebase Realtime Database
 
+    // Listener for Firebase Auth state changes
+    auth.onAuthStateChanged(user => {
+      const headerUserInfo = document.getElementById('headerUserInfo');
+      const userProfilePic = document.getElementById('userProfilePic');
+      const userNameDisplay = document.getElementById('userNameDisplay');
+
+      if (user) {
+        // User is signed in.
+        currentUser = user;
+        console.log("User logged in:", user.uid, user.email || "Anonymous");
+
+        // Display user info in header
+        headerUserInfo.style.display = 'flex';
+        if (user.photoURL) {
+            userProfilePic.src = user.photoURL;
+            userProfilePic.style.display = 'block';
+        } else {
+            userProfilePic.style.display = 'none'; // Hide if no photo
+        }
+        userNameDisplay.innerText = user.displayName || user.email || 'Guest';
+        userNameDisplay.style.display = 'block';
+
+        // Set up user-specific cart reference in Realtime Database
+        // Data will be stored under /users/<UID>/cart
+        userCartRef = db.ref('users/' + user.uid + '/cart');
+        
+        // Listen for changes to the user's cart in Firebase
+        userCartRef.on('value', (snapshot) => {
+          cart = snapshot.val() || []; // Update local cart with Firebase data
+          console.log("Cart loaded from Firebase:", cart);
+          // If the cart page is currently displayed, re-render it to show updated items
+          if (document.getElementById('cartPage').style.display === 'block') {
+              viewCartPage();
+          }
+        });
+
+        // Hide login panel and show user panel automatically on successful login
+        document.getElementById('loginPanel').style.display = 'none';
+        document.getElementById('userPanel').style.display = 'block';
+
+      } else {
+        // User is signed out.
+        currentUser = null;
+        console.log("User logged out.");
+        cart = []; // Clear local cart when user logs out
+
+        // Hide user info in header
+        headerUserInfo.style.display = 'none';
+        userProfilePic.src = '';
+        userProfilePic.style.display = 'none';
+        userNameDisplay.innerText = '';
+        userNameDisplay.style.display = 'none';
+
+        // Detach the Firebase cart listener if it was active
+        if (userCartRef) {
+          userCartRef.off();
+          userCartRef = null;
+        }
+
+        // Reset UI to show login panel and hide other panels
+        document.getElementById('userPanel').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'none';
+        document.getElementById('productDetail').style.display = 'none';
+        document.getElementById('cartPage').style.display = 'none';
+        document.getElementById('loginPanel').style.display = 'flex'; // Show login panel
+      }
+    });
+
+    // Listen for product data changes from Firebase Realtime Database
     firebase.database().ref('products').on('value', (snapshot) => {
       products = snapshot.val() || [];
       showUserProducts();
       showAdminProducts();
     });
 
+    // Admin Login Function (remains local for simplicity as per original code)
     function adminLogin() {
       const id = document.getElementById('adminId').value;
       const pass = document.getElementById('adminPass').value;
@@ -584,19 +789,107 @@
         document.getElementById('loginPanel').style.display = 'none';
         document.getElementById('adminPanel').style.display = 'block';
       } else {
-        alert('Invalid Credentials');
+        alert('Invalid Admin Credentials');
       }
     }
 
+    // User Sign Up with Email and Password
+    function userSignUp() {
+      const email = document.getElementById('userEmail').value;
+      const password = document.getElementById('userPassword').value;
+      if (!email || !password) { 
+        alert('Please enter both email and password for sign up.'); 
+        return; 
+      }
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          alert('User signed up successfully! You are now logged in.');
+          // onAuthStateChanged will handle UI update automatically
+        })
+        .catch((error) => {
+          alert('Error signing up: ' + error.message);
+        });
+    }
+
+    // User Login with Email and Password
+    function userLogin() {
+      const email = document.getElementById('userEmail').value;
+      const password = document.getElementById('userPassword').value;
+      if (!email || !password) { 
+        alert('Please enter both email and password for login.'); 
+        return; 
+      }
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          alert('User logged in successfully!');
+          // onAuthStateChanged will handle UI update automatically
+        })
+        .catch((error) => {
+          alert('Error logging in: ' + error.message);
+        });
+    }
+
+    // Sign In with Google
+    function signInWithGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then((result) => {
+          alert('Signed in with Google!');
+          // onAuthStateChanged will handle UI update automatically
+        })
+        .catch((error) => {
+          alert('Error signing in with Google: ' + error.message);
+        });
+    }
+
+    // Sign In with Apple (Placeholder - requires specific Apple Developer setup)
+    function signInWithApple() {
+      alert('Apple login is not fully implemented in this demo. It requires specific Apple Developer account setup and a secure backend for production use.');
+      // For a real application, you would use:
+      // const provider = new firebase.auth.AppleAuthProvider();
+      // auth.signInWithPopup(provider)
+      //   .then((result) => { /* Handle success */ })
+      //   .catch((error) => { /* Handle error */ });
+    }
+
+    // Sign In Anonymously
+    function signInAnonymouslyUser() {
+      auth.signInAnonymously()
+        .then(() => {
+          alert('Continued as Anonymous User!');
+          // onAuthStateChanged will handle UI update automatically
+        })
+        .catch((error) => {
+          alert('Error continuing anonymously: ' + error.message);
+        });
+    }
+
+    // Logout function (now uses Firebase Auth signOut)
     function logout() {
-      location.reload();
+      auth.signOut().then(() => {
+        alert('Logged out successfully!');
+        // onAuthStateChanged will handle UI reset and redirect to login panel
+      }).catch((error) => {
+        alert('Error logging out: ' + error.message);
+      });
     }
 
+    // Function to open the user panel (now primarily triggered by onAuthStateChanged)
     function openUserPanel() {
-      document.getElementById('loginPanel').style.display = 'none';
-      document.getElementById('userPanel').style.display = 'block';
+      // This function is still here for the "SHOP NOW" button, but actual panel display
+      // is primarily managed by onAuthStateChanged after any successful login.
+      // If a user clicks "SHOP NOW" without logging in, they will be redirected to the login options.
+      if (!currentUser) { // If not logged in, show login options instead of directly opening user panel
+          document.getElementById('loginPanel').style.display = 'flex';
+          document.getElementById('userPanel').style.display = 'none';
+          alert('Please login or continue anonymously to shop.');
+      } else {
+          document.getElementById('loginPanel').style.display = 'none';
+          document.getElementById('userPanel').style.display = 'block';
+      }
     }
 
+    // Add Product Function (Admin Panel)
     function addProduct() {
       const title = document.getElementById('productTitle').value;
       const description = document.getElementById('productDescription').value;
@@ -632,6 +925,7 @@
       }
     }
 
+    // Display products in Admin Panel
     function showAdminProducts() {
       const container = document.getElementById('adminProductList');
       container.innerHTML = '';
@@ -646,6 +940,7 @@
       });
     }
 
+    // Delete Product Function (Admin Panel)
     function deleteProduct(i) {
       if (confirm("Are you sure you want to delete this product?")) { // Confirmation dialog
         products.splice(i, 1);
@@ -653,6 +948,7 @@
       }
     }
 
+    // Display products in User Panel (Home Page)
     function showUserProducts(filtered = products) {
       const container = document.getElementById('productList');
       container.innerHTML = '';
@@ -672,6 +968,7 @@
       });
     }
 
+    // View Product Detail Page
     function viewDetail(index) {
       selectedProduct = products[index];
       document.getElementById('userPanel').style.display = 'none';
@@ -696,22 +993,36 @@
       setTimeout(setupDescriptionToggle, 50); // Small delay to ensure DOM is ready
     }
 
+    // Navigate back to Shop (User Panel)
     function backToShop() {
       document.getElementById('productDetail').style.display = 'none';
       document.getElementById('cartPage').style.display = 'none';
       document.getElementById('userPanel').style.display = 'block';
     }
 
+    // Add Product to Cart (now saves to Firebase)
     function addToCart() {
+      if (!currentUser) {
+        alert("Please log in or continue anonymously to add items to cart.");
+        return;
+      }
       if (selectedProduct) {
         cart.push(selectedProduct);
-        alert(`"${selectedProduct.title}" added to cart!`);
+        // Save cart to Firebase Realtime Database under the user's UID
+        userCartRef.set(cart) 
+          .then(() => alert(`"${selectedProduct.title}" added to cart!`))
+          .catch(error => alert("Error adding to cart: " + error.message));
       } else {
         alert("No product selected to add to cart.");
       }
     }
 
+    // View Cart Page
     function viewCartPage() {
+      if (!currentUser) {
+        alert("Please log in or continue anonymously to view your cart.");
+        return;
+      }
       if (cart.length === 0) {
         alert("Your cart is empty!");
         return;
@@ -738,17 +1049,28 @@
       });
     }
 
+    // Remove Item from Cart (now updates Firebase)
     function removeItemFromCart(index) {
+        if (!currentUser) {
+            alert("Please log in to manage your cart.");
+            return;
+        }
         if (confirm("Are you sure you want to remove this item from your cart?")) {
             cart.splice(index, 1);
-            viewCartPage(); // Re-render cart
-            if (cart.length === 0) {
-                alert("Your cart is now empty!");
-                backToShop();
-            }
+            // Update cart in Firebase Realtime Database
+            userCartRef.set(cart) 
+                .then(() => {
+                    viewCartPage(); // Re-render cart
+                    if (cart.length === 0) {
+                        alert("Your cart is now empty!");
+                        backToShop();
+                    }
+                })
+                .catch(error => alert("Error removing from cart: " + error.message));
         }
     }
 
+    // Filter Products by Search Input
     function filterProducts() {
       const search = document.getElementById("searchInput").value.toLowerCase();
       const filtered = products.filter(p => 
@@ -758,6 +1080,7 @@
       showUserProducts(filtered);
     }
 
+    // Toggle Search Input Visibility
     function toggleSearch() {
       const input = document.getElementById('searchInput');
       input.classList.toggle('show');
@@ -769,7 +1092,7 @@
       }
     }
 
-    // This function handles the "Show More/Less" toggle for product descriptions in lists and cart
+    // Toggle Description (Show More/Less) for product list items
     function toggleDescription(el, event) {
       event.stopPropagation(); // Prevent parent click from triggering viewDetail
       const para = el.nextElementSibling; // This is the actual description content paragraph
@@ -782,7 +1105,7 @@
       }
     }
 
-    // This function sets up the "Show More/Less" for the *detail* page description
+    // Setup Description Toggle for Product Detail Page
     function setupDescriptionToggle() {
       const descDiv = document.getElementById("detailDescription");
       const fullText = selectedProduct.description || ''; // Use selectedProduct's description
@@ -814,23 +1137,24 @@
       });
     }
 
+    // Handle Browser History (Back Button)
     window.onpopstate = function (event) {
         if (document.getElementById('productDetail').style.display === 'block' || document.getElementById('cartPage').style.display === 'block') {
             backToShop();
         } else if (document.getElementById('userPanel').style.display === 'block') {
             // If on user panel, go back to login or exit (browser default behavior)
             document.getElementById('userPanel').style.display = 'none';
-            document.getElementById('loginPanel').style.display = 'block';
+            document.getElementById('loginPanel').style.display = 'flex'; // Show login panel
         } else {
             // Default browser behavior for other states
             history.back();
         }
     };
 
-    // Initial display on load
+    // Initial display on page load
     document.addEventListener('DOMContentLoaded', () => {
         // This ensures login panel is shown initially
-        document.getElementById('loginPanel').style.display = 'block';
+        document.getElementById('loginPanel').style.display = 'flex'; // Use flex to center content
     });
   </script>
 </body>
