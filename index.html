@@ -176,12 +176,12 @@
   <div id="productDetail">
     <h2 id="detailTitle"></h2>
     <div class="slider" id="detailImages"></div>
-    <p id="detailDescription"></p>
     <div class="buttons">
       <button onclick="addToCart()">Add to Cart</button>
       <button id="buyNowBtn">Buy Now</button>
       <button onclick="backToShop()">Back</button>
     </div>
+    <p id="detailDescription"></p>
   </div>
 
   <script>
@@ -293,7 +293,7 @@
       document.getElementById('buyNowBtn').onclick = () => {
         window.open(selectedProduct.affiliateLink, '_blank');
       };
-      history.pushState({}, ''); // enable back button tracking
+      history.pushState({}, '');
     }
 
     function backToShop() {
