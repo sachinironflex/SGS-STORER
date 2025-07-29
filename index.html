@@ -468,5 +468,40 @@
     });
   };
 </script>
+<script>
+  function setupDescriptionToggle() {
+    const descEl = document.getElementById("detailDescription");
+    if (!descEl) return;
+
+    const fullText = descEl.innerText.trim();
+    if (fullText.length <= 100) return; // Short enough, no toggle needed
+
+    const shortText = fullText.slice(0, 100) + "...";
+
+    descEl.innerHTML = `
+      <p id="shortDesc">${shortText}</p>
+      <p id="fullDesc" style="display:none;">${fullText}</p>
+      <button id="toggleDescBtn" style="margin-top:10px;padding:6px 12px;background:#007bff;color:white;border:none;border-radius:5px;">Show More</button>
+    `;
+
+    const btn = document.getElementById("toggleDescBtn");
+    btn.addEventListener("click", () => {
+      const shortPara = document.getElementById("shortDesc");
+      const fullPara = document.getElementById("fullDesc");
+
+      const isHidden = fullPara.style.display === "none";
+      shortPara.style.display = isHidden ? "none" : "block";
+      fullPara.style.display = isHidden ? "block" : "none";
+      btn.innerText = isHidden ? "Hide" : "Show More";
+    });
+  }
+
+  // Run setup when product detail opens
+  const originalViewDetail = viewDetail;
+  viewDetail = function(index) {
+    originalViewDetail(index);
+    setTimeout(setupDescriptionToggle, 100); // wait for DOM to update
+  };
+</script>
 </body>
 </html>
