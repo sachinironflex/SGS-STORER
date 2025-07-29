@@ -279,7 +279,7 @@
           <div class="product" onclick="viewDetail(${index})">
             <img src="${product.images[0]}" />
             <h4>${product.title}</h4>
-            <p onclick="toggleDescription(this)" style="color:blue;cursor:pointer;">Show More</p>
+            <p onclick="toggleDescription(this, event)" style="color:blue;cursor:pointer;">Show More</p>
             <p style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;">${product.description}</p>
           </div>`;
       });
@@ -326,7 +326,7 @@
           <div class="product">
             <img src="${item.images[0]}" />
             <h4>${item.title}</h4>
-            <p onclick="toggleDescription(this)" style="color:blue;cursor:pointer;">Show More</p>
+            <p onclick="toggleDescription(this, event)" style="color:blue;cursor:pointer;">Show More</p>
             <p style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;">${item.description}</p>
             <div class="buttons">
               <button onclick="addToCartFromCart(${i})">Add to Cart</button>
@@ -356,7 +356,14 @@
       }
     }
 
-    function toggleDescription(el) {
+    function toggleDescription(el, event) {
+      event.stopPropagation(); // prevent parent click
+      document.querySelectorAll('#productList .product p:nth-child(4)').forEach(p => {
+        p.style.maxHeight = null;
+      });
+      document.querySelectorAll('#productList .product p:nth-child(3)').forEach(p => {
+        p.innerText = 'Show More';
+      });
       const para = el.nextElementSibling;
       if (para.style.maxHeight) {
         para.style.maxHeight = null;
@@ -374,5 +381,92 @@
       }
     };
   </script>
+  <script>
+  // Modify addProduct to include price
+  const originalAddProduct = addProduct;
+  addProduct = function () {
+    const title = document.getElementById('productTitle').value;
+    const description = document.getElementById('productDescription').value;
+    const affiliateLink = document.getElementById('affiliateLink').value;
+    const files = document.getElementById('productImages').files;
+    const price = prompt("Enter Price ₹");
+
+    if (!title || !affiliateLink || files.length === 0 || !price) return alert('All fields required');
+
+    const images = [];
+    for (let file of files) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        images.push(e.target.result);
+        if (images.length === files.length) {
+          const newProduct = { title, description, affiliateLink, images, price };
+          products.push(newProduct);
+          firebase.database().ref('products').set(products);
+          alert('Product Added with Price ₹' + price);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Modify showUserProducts to display price
+  const originalShowUserProducts = showUserProducts;
+  showUserProducts = function (filtered = products) {
+    const container = document.getElementById('productList');
+    container.innerHTML = '';
+    filtered.forEach((product, index) => {
+      container.innerHTML += `
+        <div class="product" onclick="viewDetail(${index})">
+          <img src="${product.images[0]}" />
+          <h4>${product.title}</h4>
+          <p style="color:green;font-weight:bold;">₹${product.price || '0'}</p>
+          <p onclick="toggleDescription(this, event)" style="color:blue;cursor:pointer;">Show More</p>
+          <p style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;">${product.description}</p>
+        </div>`;
+    });
+  };
+
+  // Modify viewCartPage to show price
+  const originalViewCartPage = viewCartPage;
+  viewCartPage = function () {
+    if (cart.length === 0) return alert("Cart is empty!");
+    document.getElementById('userPanel').style.display = 'none';
+    document.getElementById('productDetail').style.display = 'none';
+    document.getElementById('cartPage').style.display = 'block';
+
+    const container = document.getElementById("cartItems");
+    container.innerHTML = '';
+    cart.forEach((item, i) => {
+      container.innerHTML += `
+        <div class="product">
+          <img src="${item.images[0]}" />
+          <h4>${item.title}</h4>
+          <p style="color:green;font-weight:bold;">₹${item.price || '0'}</p>
+          <p onclick="toggleDescription(this, event)" style="color:blue;cursor:pointer;">Show More</p>
+          <p style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;">${item.description}</p>
+          <div class="buttons">
+            <button onclick="addToCartFromCart(${i})">Add to Cart</button>
+            <button onclick="window.open('${item.affiliateLink}', '_blank')">Buy Now</button>
+          </div>
+        </div>`;
+    });
+  };
+
+  // Modify showAdminProducts to display price
+  const originalShowAdminProducts = showAdminProducts;
+  showAdminProducts = function () {
+    const container = document.getElementById('adminProductList');
+    container.innerHTML = '';
+    products.forEach((product, index) => {
+      container.innerHTML += `
+        <div class="product">
+          <img src="${product.images[0]}" />
+          <h4>${product.title}</h4>
+          <p style="color:green;font-weight:bold;">₹${product.price || '0'}</p>
+          <button onclick="deleteProduct(${index})">Delete</button>
+        </div>`;
+    });
+  };
+</script>
 </body>
 </html>
