@@ -5,131 +5,493 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SGS Product Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Global Styles & Reset */
+    * { 
+      box-sizing: border-box; 
       margin: 0;
       padding: 0;
-      background: #f1f3f6;
     }
+    body {
+      font-family: 'Poppins', sans-serif; /* Modern font */
+      margin: 0;
+      padding: 0;
+      background: #eef2f6; /* Lighter, professional background */
+      color: #333; /* Darker text for readability */
+      line-height: 1.6;
+    }
+
+    /* Header Styling */
     header {
-      background-color: #232f3e;
+      background-color: #2c3e50; /* Darker, more premium header */
       color: white;
-      padding: 15px 20px;
+      padding: 20px 30px; /* More padding */
       text-align: center;
-      font-size: 24px;
-      font-weight: bold;
+      font-size: 28px; /* Slightly larger title */
+      font-weight: 700; /* Bolder */
       position: relative;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Subtle shadow */
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .top-right-controls {
       position: absolute;
-      right: 20px;
+      right: 30px; /* More spacing from edge */
       top: 50%;
       transform: translateY(-50%);
       display: flex;
-      gap: 10px;
+      gap: 15px; /* Increased gap */
       align-items: center;
     }
     .top-right-controls input {
-      padding: 5px 10px;
-      border-radius: 5px;
-      border: none;
-      font-size: 14px;
+      padding: 8px 15px; /* More padding */
+      border-radius: 25px; /* Pill-shaped search bar */
+      border: 1px solid #556c8a; /* Subtle border */
+      font-size: 15px;
       display: none;
+      background-color: #f9f9f9; /* Light background for input */
+      color: #333;
+      transition: all 0.3s ease; /* Smooth transition */
     }
     .top-right-controls input.show {
       display: inline-block;
+      width: 200px; /* Defined width when shown */
     }
     .top-right-controls button {
-      background: #f0c14b;
-      padding: 6px 12px;
-      font-weight: bold;
+      background: #3498db; /* Professional blue button */
+      color: white; /* White text for contrast */
+      padding: 8px 18px; /* More padding */
+      font-weight: 600; /* Semi-bold */
       border: none;
-      border-radius: 5px;
+      border-radius: 25px; /* Pill-shaped buttons */
       cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effects */
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .top-right-controls button:hover {
+      background: #2980b9; /* Darker blue on hover */
+      transform: translateY(-1px); /* Slight lift */
     }
     .search-icon {
       background: none;
       border: none;
       color: white;
-      font-size: 20px;
+      font-size: 22px; /* Slightly larger icon */
       cursor: pointer;
+      transition: color 0.3s ease;
     }
-    #adminPanel, #userPanel, #productDetail, #cartPage {
+    .search-icon:hover {
+      color: #f0c14b; /* Highlight on hover */
+    }
+
+    /* General Panel Styling */
+    #adminPanel, #productDetail, #cartPage {
       display: none;
-      padding: 20px;
+      padding: 30px; /* More generous padding */
+      max-width: 1200px; /* Max width for content */
+      margin: 20px auto; /* Center content with margin */
+      background: white; /* White background for panels */
+      border-radius: 12px; /* Rounded corners */
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08); /* More pronounced shadow */
+      animation: fadeIn 0.6s ease-out; /* Smoother fade-in */
     }
-    #productList {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      justify-content: center;
+    h2 {
+      color: #2c3e50; /* Matches header color */
+      margin-bottom: 25px; /* More space below headings */
+      text-align: center;
+      font-weight: 600;
+      font-size: 2em;
+    }
+    hr {
+      border: 0;
+      height: 1px;
+      background: #eee;
+      margin: 30px 0;
+    }
+
+    /* Login Panel Styling */
+    #loginPanel {
+      display: flex; /* Use flexbox for layout */
+      flex-direction: column; /* Stack items vertically */
+      align-items: center; /* Center items horizontally */
+      justify-content: center; /* Center items vertically */
+      min-height: 80vh; /* Make it take up most of the viewport height */
+      padding: 30px;
+      max-width: 500px; /* Max width for login box */
+      margin: 20px auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      animation: fadeIn 0.6s ease-out;
+    }
+    #loginPanel h2 {
+      margin-bottom: 20px;
+      font-size: 2.2em; /* Larger heading for login */
+      color: #2c3e50;
+    }
+    #loginPanel input {
+      width: 100%; /* Full width within the max-width of the panel */
+      max-width: 350px; /* Limit input width */
+      margin-bottom: 15px;
+      padding: 12px 15px;
+      border: 1px solid #dcdcdc;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+    #loginPanel button {
+      width: 100%;
+      max-width: 350px; /* Match input width */
+      padding: 15px 20px; /* Larger padding for bigger buttons */
+      font-size: 1.2em; /* Larger font size */
+      font-weight: 600;
+      border: none;
+      border-radius: 8px; /* Slightly less rounded for a solid feel */
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* More prominent shadow */
+      letter-spacing: 0.5px; /* Subtle letter spacing */
+    }
+    #loginPanel button:hover {
+      transform: translateY(-2px); /* More pronounced lift */
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15); /* Stronger shadow on hover */
+    }
+    /* Specific style for Login button */
+    #loginPanel button[onclick="adminLogin()"] {
+      background: #f0c14b; /* Amazon-like yellow-orange */
+      color: #111; /* Dark text for contrast */
+      margin-bottom: 25px; /* More space below login button */
+    }
+    #loginPanel button[onclick="adminLogin()"]:hover {
+      background: #ddb347; /* Darker yellow-orange on hover */
+    }
+    /* Specific style for SHOP NOW button */
+    #loginPanel button[onclick="openUserPanel()"] {
+      background: #ff9900; /* Amazon's primary orange */
+      color: white; /* White text */
+      margin-top: 25px; /* Space above SHOP NOW */
+    }
+    #loginPanel button[onclick="openUserPanel()"]:hover {
+      background: #e68a00; /* Darker orange on hover */
+    }
+
+
+    /* User Panel (Home Page) Styling */
+    #userPanel {
+      display: none;
+      padding: 30px;
+      max-width: 1400px; /* Wider for more products per row */
+      margin: 20px auto;
+      background: #f8f9fa; /* Slightly off-white background for the main product area */
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05); /* Lighter shadow for the main area */
+      animation: fadeIn 0.6s ease-out;
+    }
+    #userPanel h2 {
+        margin-bottom: 30px; /* More space below heading */
+        color: #2c3e50;
+        font-size: 2.5em; /* Larger heading for the main product section */
+        font-weight: 700;
+    }
+
+    /* Product List & Card Styling */
+    #productList, #adminProductList, #cartItems {
+      display: grid; /* Use CSS Grid for better layout control */
+      /* Responsive grid: 1 column on small, 2 on medium, 3-4 on large */
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Increased min-width for larger cards */
+      gap: 30px; /* Increased gap between products */
+      justify-items: center; /* Center items in grid */
     }
     .product {
       background: white;
-      padding: 10px;
-      border-radius: 10px;
-      width: 150px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
+      padding: 20px; /* More padding inside each product card */
+      border-radius: 15px; /* More rounded corners for a softer look */
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* More prominent shadow for cards */
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease; /* Smooth transitions for hover */
+      width: 100%; /* Occupy full grid column */
+      max-width: 280px; /* Increased max-width for individual product card */
+      display: flex; /* Flex for internal alignment */
+      flex-direction: column;
+      justify-content: space-between; /* Space out content */
+      overflow: hidden; /* Hide overflow for descriptions */
+      border: 1px solid #e0e0e0; /* Subtle border */
+      cursor: pointer; /* Indicate clickability */
     }
     .product:hover {
-      transform: scale(1.03);
+      transform: translateY(-8px); /* More pronounced lift effect on hover */
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2); /* Stronger, deeper shadow on hover */
+      border-color: #3498db; /* Highlight border on hover */
     }
     .product img {
       width: 100%;
-      height: 120px;
+      height: 180px; /* Larger image height */
       object-fit: contain;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 10px;
+      border-bottom: 1px solid #f0f0f0; /* Lighter border */
+      padding-bottom: 15px;
+      margin-bottom: 15px; /* More space below image */
+      border-radius: 10px; /* Rounded image corners */
+      background-color: #fff; /* Ensure image background is white */
     }
-    .slider {
+    .product h4 {
+      font-size: 1.3em; /* Larger title */
+      margin-bottom: 10px;
+      color: #2c3e50; /* Darker title color */
+      text-align: center;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+    .product p {
+      font-size: 0.95em; /* Slightly larger body text */
+      color: #555;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .product .price { /* Specific style for price */
+      color: #28a745; /* Green for price */
+      font-weight: 700;
+      font-size: 1.3em; /* Larger price font */
+      margin-top: 10px;
+      margin-bottom: 15px; /* More space below price */
+    }
+    .product p.show-more-toggle { /* Style for show more/less */
+      color: #007bff;
+      cursor: pointer;
+      font-size: 0.9em;
+      text-decoration: underline;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .product p.description-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease-out; /* Smoother transition */
+      text-align: left; /* Align description left */
+      padding: 5px 0;
+      font-size: 0.9em;
+      color: #666;
+    }
+    .product .buttons { /* Buttons inside product cards */
+      margin-top: 20px; /* More space above buttons */
       display: flex;
-      overflow-x: auto;
-      gap: 10px;
+      flex-direction: column; /* Stack buttons */
+      gap: 10px; /* Increased gap */
     }
-    .slider img {
+    .product .buttons button {
       width: 100%;
-      max-height: 250px;
-      flex-shrink: 0;
+      padding: 10px 15px; /* More padding for buttons */
+      font-size: 1em; /* Larger font size */
+      border-radius: 8px; /* Slightly less rounded */
+      background: #3498db;
+      color: white;
+      font-weight: 500;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease, transform 0.2s ease;
     }
-    .buttons {
-      margin-top: 15px;
+    .product .buttons button:hover {
+      background: #2980b9;
+      transform: translateY(-1px);
+    }
+    .product .buttons button:last-child { /* Specific style for Buy Now */
+        background: #f39c12; /* Orange for Buy Now */
+    }
+    .product .buttons button:last-child:hover {
+        background: #e67e22;
+    }
+
+    /* Product Detail Page */
+    #productDetail {
+      text-align: center;
+    }
+    #detailTitle {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+    #productDetail .price {
+      font-size: 1.8em;
+      color: #28a745;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+    #detailImages {
       display: flex;
-      gap: 10px;
+      overflow-x: auto; /* Allow horizontal scrolling for images */
+      gap: 15px;
+      padding-bottom: 15px; /* Space for scrollbar */
+      scroll-snap-type: x mandatory; /* Snap to images */
+      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+      margin-bottom: 25px;
+    }
+    #detailImages img {
+      width: 100%;
+      min-width: 300px; /* Ensure images are a decent size */
+      max-height: 400px; /* Larger images for detail view */
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      scroll-snap-align: start;
+    }
+    #productDetail .buttons {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center; /* Center buttons */
+      gap: 15px;
       flex-wrap: wrap;
     }
-    button {
-      padding: 10px 16px;
-      border: none;
-      border-radius: 5px;
-      background: #f0c14b;
-      color: #111;
-      cursor: pointer;
-      font-weight: bold;
+    #productDetail .buttons button {
+      min-width: 150px; /* Ensure buttons are a good size */
+      padding: 12px 25px; /* Larger padding */
+      font-size: 1.1em;
+      border-radius: 8px;
     }
-    button:hover {
-      background: #ddb347;
+    #productDetail #buyNowBtn {
+        background: #f39c12; /* Orange for Buy Now */
+        color: white;
     }
+    #productDetail #buyNowBtn:hover {
+        background: #e67e22;
+    }
+    #productDetail button:last-child { /* Back button */
+      background: #95a5a6; /* Grey for back button */
+    }
+    #productDetail button:last-child:hover {
+      background: #7f8c8d;
+    }
+    #detailDescription {
+      text-align: left;
+      font-size: 1.1em;
+      color: #555;
+      margin-top: 20px;
+    }
+    #detailDescription p { /* For the toggleable description */
+        margin-bottom: 10px;
+    }
+    #detailDescription #toggleDescBtn {
+        background: #007bff;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        margin-top: 10px;
+    }
+    #detailDescription #toggleDescBtn:hover {
+        background: #0056b3;
+    }
+
+    /* Form Elements */
     input, textarea {
-      width: 100%;
-      max-width: 400px;
-      margin-bottom: 10px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      width: calc(100% - 20px); /* Adjust for padding */
+      max-width: 500px; /* Slightly wider forms */
+      margin-bottom: 15px; /* More space between inputs */
+      padding: 12px 15px; /* More padding */
+      border: 1px solid #dcdcdc; /* Lighter border */
+      border-radius: 8px; /* Rounded corners */
+      font-size: 1em;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      background-color: #fcfcfc;
     }
-    #productDetail img {
-      max-width: 100%;
-      max-height: 250px;
+    input:focus, textarea:focus {
+      border-color: #3498db; /* Highlight on focus */
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); /* Soft blue shadow on focus */
+      outline: none;
     }
-    #loginPanel, #adminPanel, #userPanel, #productDetail {
-      animation: fadeIn 0.5s;
+    textarea {
+      min-height: 100px; /* Taller textarea */
+      resize: vertical; /* Allow vertical resizing */
     }
+
+    /* Admin Panel Specific */
+    #adminPanel button {
+      margin-top: 10px;
+      margin-right: 10px; /* Space between admin buttons */
+    }
+
+    /* Cart Page Specific */
+    #cartPage .product {
+        margin-bottom: 20px; /* Space between cart items */
+    }
+    #cartPage .product .buttons {
+        margin-top: 10px;
+    }
+    #cartPage > button { /* Back to Shop button on cart page */
+        margin-top: 30px;
+        background: #6c757d;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 8px;
+        font-size: 1.1em;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    #cartPage > button:hover {
+        background: #5a6268;
+    }
+
+    /* Animations */
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 1024px) {
+        #productList, #adminProductList, #cartItems {
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 25px;
+        }
+        .product {
+            max-width: 250px;
+        }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        font-size: 22px;
+        padding: 15px 10px;
+      }
+      .top-right-controls {
+        position: static; /* Stack controls on smaller screens */
+        transform: none;
+        margin-top: 10px;
+        justify-content: center;
+        width: 100%;
+      }
+      .top-right-controls input.show {
+        width: 100%; /* Full width search on mobile */
+      }
+      #adminPanel, #userPanel, #productDetail, #cartPage, #loginPanel {
+        padding: 15px;
+        margin: 10px auto;
+      }
+      #loginPanel button { /* Adjust button size for mobile login panel */
+        padding: 12px 15px;
+        font-size: 1em;
+      }
+      #productList, #adminProductList, #cartItems {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Smaller cards on mobile */
+        gap: 15px;
+      }
+      .product {
+        padding: 10px;
+        max-width: none; /* Allow products to fill available width */
+      }
+      .product img {
+        height: 100px;
+      }
+      #productDetail #detailImages img {
+        min-width: 250px;
+        max-height: 300px;
+      }
+      h2 {
+        font-size: 1.8em;
+      }
+      #detailTitle {
+        font-size: 2em;
+      }
     }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -139,9 +501,13 @@
   <header>
     SGS PRODUCT SHOP
     <div class="top-right-controls">
-      <button class="search-icon" onclick="toggleSearch()">🔍</button>
+      <button class="search-icon" onclick="toggleSearch()">
+        <i class="fas fa-search"></i>
+      </button>
       <input type="text" id="searchInput" placeholder="Search Product..." oninput="filterProducts()" />
-      <button onclick="viewCartPage()">View My Cart</button>
+      <button onclick="viewCartPage()">
+        <i class="fas fa-shopping-cart"></i> View My Cart
+      </button>
     </div>
   </header>
 
@@ -152,7 +518,7 @@
     <button onclick="adminLogin()">Login</button>
     <hr />
     <h2>User Access</h2>
-    <button onclick="openUserPanel()">SHOPPING NOW</button>
+    <button onclick="openUserPanel()">SHOP NOW</button>
   </div>
 
   <div id="adminPanel">
@@ -173,13 +539,14 @@
 
   <div id="productDetail">
     <h2 id="detailTitle"></h2>
+    <p class="price" id="detailPrice"></p> <!-- Added for detail price -->
     <div class="slider" id="detailImages"></div>
     <div class="buttons">
       <button onclick="addToCart()">Add to Cart</button>
       <button id="buyNowBtn">Buy Now</button>
       <button onclick="backToShop()">Back</button>
     </div>
-    <p id="detailDescription"></p>
+    <div id="detailDescription"></div> <!-- Changed to div for structured toggle -->
   </div>
 
   <div id="cartPage">
@@ -235,18 +602,30 @@
       const description = document.getElementById('productDescription').value;
       const affiliateLink = document.getElementById('affiliateLink').value;
       const files = document.getElementById('productImages').files;
-      if (!title || !affiliateLink || files.length === 0) return alert('All fields required');
+      const price = prompt("Enter Price ₹"); // Keep prompt for price
+
+      if (!title || !affiliateLink || files.length === 0 || !price) return alert('All fields required');
 
       const images = [];
+      let filesProcessed = 0; // Counter for async image loading
+      if (files.length === 0) { // Handle case with no files but other data
+        const newProduct = { title, description, affiliateLink, images: [], price };
+        products.push(newProduct);
+        firebase.database().ref('products').set(products);
+        alert('Product Added with Price ₹' + price);
+        return;
+      }
+
       for (let file of files) {
         const reader = new FileReader();
         reader.onload = function (e) {
           images.push(e.target.result);
-          if (images.length === files.length) {
-            const newProduct = { title, description, affiliateLink, images };
+          filesProcessed++;
+          if (filesProcessed === files.length) { // Check if all files are processed
+            const newProduct = { title, description, affiliateLink, images, price };
             products.push(newProduct);
             firebase.database().ref('products').set(products);
-            alert('Product Added');
+            alert('Product Added with Price ₹' + price);
           }
         };
         reader.readAsDataURL(file);
@@ -259,28 +638,36 @@
       products.forEach((product, index) => {
         container.innerHTML += `
           <div class="product">
-            <img src="${product.images[0]}" />
+            <img src="${product.images[0] || 'https://via.placeholder.com/150?text=No+Image'}" alt="${product.title}" />
             <h4>${product.title}</h4>
+            <p class="price">₹${product.price || '0'}</p>
             <button onclick="deleteProduct(${index})">Delete</button>
           </div>`;
       });
     }
 
     function deleteProduct(i) {
-      products.splice(i, 1);
-      firebase.database().ref('products').set(products);
+      if (confirm("Are you sure you want to delete this product?")) { // Confirmation dialog
+        products.splice(i, 1);
+        firebase.database().ref('products').set(products);
+      }
     }
 
     function showUserProducts(filtered = products) {
       const container = document.getElementById('productList');
       container.innerHTML = '';
+      if (filtered.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#666; font-size:1.2em; margin-top:50px;">No products found matching your criteria.</p>';
+        return;
+      }
       filtered.forEach((product, index) => {
         container.innerHTML += `
-          <div class="product" onclick="viewDetail(${index})">
-            <img src="${product.images[0]}" />
+          <div class="product" onclick="viewDetail(${products.indexOf(product)})"> <!-- Use original index -->
+            <img src="${product.images[0] || 'https://via.placeholder.com/150?text=No+Image'}" alt="${product.title}" />
             <h4>${product.title}</h4>
-            <p onclick="toggleDescription(this, event)" style="color:blue;cursor:pointer;">Show More</p>
-            <p style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;">${product.description}</p>
+            <p class="price">₹${product.price || '0'}</p>
+            <p class="show-more-toggle" onclick="toggleDescription(this, event)">Show More</p>
+            <p class="description-content">${product.description}</p>
           </div>`;
       });
     }
@@ -290,16 +677,23 @@
       document.getElementById('userPanel').style.display = 'none';
       document.getElementById('productDetail').style.display = 'block';
       document.getElementById('detailTitle').innerText = selectedProduct.title;
-      document.getElementById('detailDescription').innerText = selectedProduct.description;
+      document.getElementById('detailPrice').innerText = `₹${selectedProduct.price || '0'}`; // Set price
+      
       const imgContainer = document.getElementById('detailImages');
       imgContainer.innerHTML = '';
-      selectedProduct.images.forEach(img => {
-        imgContainer.innerHTML += `<img src="${img}" />`;
-      });
+      if (selectedProduct.images && selectedProduct.images.length > 0) {
+        selectedProduct.images.forEach(img => {
+          imgContainer.innerHTML += `<img src="${img}" alt="${selectedProduct.title}" />`;
+        });
+      } else {
+        imgContainer.innerHTML = `<img src="https://via.placeholder.com/400x250?text=No+Image" alt="No Image" />`;
+      }
+
       document.getElementById('buyNowBtn').onclick = () => {
         window.open(selectedProduct.affiliateLink, '_blank');
       };
-      history.pushState({}, '');
+      history.pushState({}, ''); // For back button functionality
+      setTimeout(setupDescriptionToggle, 50); // Small delay to ensure DOM is ready
     }
 
     function backToShop() {
@@ -309,12 +703,19 @@
     }
 
     function addToCart() {
-      cart.push(selectedProduct);
-      alert("Product added to cart!");
+      if (selectedProduct) {
+        cart.push(selectedProduct);
+        alert(`"${selectedProduct.title}" added to cart!`);
+      } else {
+        alert("No product selected to add to cart.");
+      }
     }
 
     function viewCartPage() {
-      if (cart.length === 0) return alert("Cart is empty!");
+      if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+      }
       document.getElementById('userPanel').style.display = 'none';
       document.getElementById('productDetail').style.display = 'none';
       document.getElementById('cartPage').style.display = 'block';
@@ -324,27 +725,36 @@
       cart.forEach((item, i) => {
         container.innerHTML += `
           <div class="product">
-            <img src="${item.images[0]}" />
+            <img src="${item.images[0] || 'https://via.placeholder.com/150?text=No+Image'}" alt="${item.title}" />
             <h4>${item.title}</h4>
-            <p onclick="toggleDescription(this, event)" style="color:blue;cursor:pointer;">Show More</p>
-            <p style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;">${item.description}</p>
+            <p class="price">₹${item.price || '0'}</p>
+            <p class="show-more-toggle" onclick="toggleDescription(this, event)">Show More</p>
+            <p class="description-content">${item.description}</p>
             <div class="buttons">
-              <button onclick="addToCartFromCart(${i})">Add to Cart</button>
+              <button onclick="removeItemFromCart(${i})" style="background:#dc3545;">Remove</button> <!-- Remove button -->
               <button onclick="window.open('${item.affiliateLink}', '_blank')">Buy Now</button>
             </div>
           </div>`;
       });
     }
 
-    function addToCartFromCart(index) {
-      const item = cart[index];
-      cart.push(item);
-      alert("Product added to cart again!");
+    function removeItemFromCart(index) {
+        if (confirm("Are you sure you want to remove this item from your cart?")) {
+            cart.splice(index, 1);
+            viewCartPage(); // Re-render cart
+            if (cart.length === 0) {
+                alert("Your cart is now empty!");
+                backToShop();
+            }
+        }
     }
 
     function filterProducts() {
       const search = document.getElementById("searchInput").value.toLowerCase();
-      const filtered = products.filter(p => p.title.toLowerCase().includes(search));
+      const filtered = products.filter(p => 
+        p.title.toLowerCase().includes(search) || 
+        (p.description && p.description.toLowerCase().includes(search))
+      );
       showUserProducts(filtered);
     }
 
@@ -353,19 +763,17 @@
       input.classList.toggle('show');
       if (input.classList.contains('show')) {
         input.focus();
+      } else {
+        input.value = ''; // Clear search when hidden
+        filterProducts(); // Reset products display
       }
     }
 
+    // This function handles the "Show More/Less" toggle for product descriptions in lists and cart
     function toggleDescription(el, event) {
-      event.stopPropagation(); // prevent parent click
-      document.querySelectorAll('#productList .product p:nth-child(4)').forEach(p => {
-        p.style.maxHeight = null;
-      });
-      document.querySelectorAll('#productList .product p:nth-child(3)').forEach(p => {
-        p.innerText = 'Show More';
-      });
-      const para = el.nextElementSibling;
-      if (para.style.maxHeight) {
+      event.stopPropagation(); // Prevent parent click from triggering viewDetail
+      const para = el.nextElementSibling; // This is the actual description content paragraph
+      if (para.style.maxHeight && para.style.maxHeight !== '0px') {
         para.style.maxHeight = null;
         el.innerText = 'Show More';
       } else {
@@ -374,134 +782,56 @@
       }
     }
 
-    window.onpopstate = function () {
-      if (document.getElementById('productDetail').style.display === 'block') {
-        backToShop();
-        history.pushState({}, '');
+    // This function sets up the "Show More/Less" for the *detail* page description
+    function setupDescriptionToggle() {
+      const descDiv = document.getElementById("detailDescription");
+      const fullText = selectedProduct.description || ''; // Use selectedProduct's description
+      
+      descDiv.innerHTML = ''; // Clear previous content
+
+      if (fullText.length <= 150) { // Adjust character limit for detail page
+        descDiv.innerHTML = `<p>${fullText}</p>`;
+        return;
       }
-    };
-  </script>
-  <script>
-  // Modify addProduct to include price
-  const originalAddProduct = addProduct;
-  addProduct = function () {
-    const title = document.getElementById('productTitle').value;
-    const description = document.getElementById('productDescription').value;
-    const affiliateLink = document.getElementById('affiliateLink').value;
-    const files = document.getElementById('productImages').files;
-    const price = prompt("Enter Price ₹");
 
-    if (!title || !affiliateLink || files.length === 0 || !price) return alert('All fields required');
+      const shortText = fullText.slice(0, 150) + "...";
 
-    const images = [];
-    for (let file of files) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        images.push(e.target.result);
-        if (images.length === files.length) {
-          const newProduct = { title, description, affiliateLink, images, price };
-          products.push(newProduct);
-          firebase.database().ref('products').set(products);
-          alert('Product Added with Price ₹' + price);
-        }
-      };
-      reader.readAsDataURL(file);
+      descDiv.innerHTML = `
+        <p id="shortDesc">${shortText}</p>
+        <p id="fullDesc" style="display:none;">${fullText}</p>
+        <button id="toggleDescBtn" class="toggle-button">Show More</button>
+      `;
+
+      const btn = document.getElementById("toggleDescBtn");
+      btn.addEventListener("click", () => {
+        const shortPara = document.getElementById("shortDesc");
+        const fullPara = document.getElementById("fullDesc");
+
+        const isHidden = fullPara.style.display === "none";
+        shortPara.style.display = isHidden ? "none" : "block";
+        fullPara.style.display = isHidden ? "block" : "none";
+        btn.innerText = isHidden ? "Show Less" : "Show More"; // Updated text
+      });
     }
-  };
 
-  // Modify showUserProducts to display price
-  const originalShowUserProducts = showUserProducts;
-  showUserProducts = function (filtered = products) {
-    const container = document.getElementById('productList');
-    container.innerHTML = '';
-    filtered.forEach((product, index) => {
-      container.innerHTML += `
-        <div class="product" onclick="viewDetail(${index})">
-          <img src="${product.images[0]}" />
-          <h4>${product.title}</h4>
-          <p style="color:green;font-weight:bold;">₹${product.price || '0'}</p>
-          <p onclick="toggleDescription(this, event)" style="color:blue;cursor:pointer;">Show More</p>
-          <p style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;">${product.description}</p>
-        </div>`;
+    window.onpopstate = function (event) {
+        if (document.getElementById('productDetail').style.display === 'block' || document.getElementById('cartPage').style.display === 'block') {
+            backToShop();
+        } else if (document.getElementById('userPanel').style.display === 'block') {
+            // If on user panel, go back to login or exit (browser default behavior)
+            document.getElementById('userPanel').style.display = 'none';
+            document.getElementById('loginPanel').style.display = 'block';
+        } else {
+            // Default browser behavior for other states
+            history.back();
+        }
+    };
+
+    // Initial display on load
+    document.addEventListener('DOMContentLoaded', () => {
+        // This ensures login panel is shown initially
+        document.getElementById('loginPanel').style.display = 'block';
     });
-  };
-
-  // Modify viewCartPage to show price
-  const originalViewCartPage = viewCartPage;
-  viewCartPage = function () {
-    if (cart.length === 0) return alert("Cart is empty!");
-    document.getElementById('userPanel').style.display = 'none';
-    document.getElementById('productDetail').style.display = 'none';
-    document.getElementById('cartPage').style.display = 'block';
-
-    const container = document.getElementById("cartItems");
-    container.innerHTML = '';
-    cart.forEach((item, i) => {
-      container.innerHTML += `
-        <div class="product">
-          <img src="${item.images[0]}" />
-          <h4>${item.title}</h4>
-          <p style="color:green;font-weight:bold;">₹${item.price || '0'}</p>
-          <p onclick="toggleDescription(this, event)" style="color:blue;cursor:pointer;">Show More</p>
-          <p style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;">${item.description}</p>
-          <div class="buttons">
-            <button onclick="addToCartFromCart(${i})">Add to Cart</button>
-            <button onclick="window.open('${item.affiliateLink}', '_blank')">Buy Now</button>
-          </div>
-        </div>`;
-    });
-  };
-
-  // Modify showAdminProducts to display price
-  const originalShowAdminProducts = showAdminProducts;
-  showAdminProducts = function () {
-    const container = document.getElementById('adminProductList');
-    container.innerHTML = '';
-    products.forEach((product, index) => {
-      container.innerHTML += `
-        <div class="product">
-          <img src="${product.images[0]}" />
-          <h4>${product.title}</h4>
-          <p style="color:green;font-weight:bold;">₹${product.price || '0'}</p>
-          <button onclick="deleteProduct(${index})">Delete</button>
-        </div>`;
-    });
-  };
-</script>
-<script>
-  function setupDescriptionToggle() {
-    const descEl = document.getElementById("detailDescription");
-    if (!descEl) return;
-
-    const fullText = descEl.innerText.trim();
-    if (fullText.length <= 100) return; // Short enough, no toggle needed
-
-    const shortText = fullText.slice(0, 100) + "...";
-
-    descEl.innerHTML = `
-      <p id="shortDesc">${shortText}</p>
-      <p id="fullDesc" style="display:none;">${fullText}</p>
-      <button id="toggleDescBtn" style="margin-top:10px;padding:6px 12px;background:#007bff;color:white;border:none;border-radius:5px;">Show More</button>
-    `;
-
-    const btn = document.getElementById("toggleDescBtn");
-    btn.addEventListener("click", () => {
-      const shortPara = document.getElementById("shortDesc");
-      const fullPara = document.getElementById("fullDesc");
-
-      const isHidden = fullPara.style.display === "none";
-      shortPara.style.display = isHidden ? "none" : "block";
-      fullPara.style.display = isHidden ? "block" : "none";
-      btn.innerText = isHidden ? "Hide" : "Show More";
-    });
-  }
-
-  // Run setup when product detail opens
-  const originalViewDetail = viewDetail;
-  viewDetail = function(index) {
-    originalViewDetail(index);
-    setTimeout(setupDescriptionToggle, 100); // wait for DOM to update
-  };
-</script>
+  </script>
 </body>
 </html>
