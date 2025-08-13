@@ -84,7 +84,7 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-    <div id="login-container" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
+    <div id="login-container" class="hidden min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
         <div class="text-center bg-white p-10 rounded-xl shadow-2xl w-full max-w-md">
             <h1 class="text-4xl font-bold mb-2 text-gray-800">Welcome to the Store</h1>
             <p class="text-gray-500 mb-8">Login to start shopping or access the admin panel.</p>
@@ -258,26 +258,49 @@
             document.querySelectorAll('#app-container > div').forEach(view => view.style.display = 'none');
             document.getElementById(appScreenId).style.display = 'block';
         };
+        
+        const navigate = (path) => {
+            history.pushState({path}, '', path);
+            router();
+        }
+
+        const router = () => {
+            const path = window.location.hash || '#login';
+            
+            if (path === '#admin') {
+                showScreen('app-container');
+                showAppScreen('admin-dashboard-view');
+                loadAdminProducts();
+            } else if (path === '#shop') {
+                if (auth.currentUser) {
+                    showScreen('app-container');
+                    showAppScreen('user-view');
+                    loadUserProducts();
+                } else {
+                    navigate('#login');
+                }
+            } else { // #login or any other hash
+                if(auth.currentUser) signOut(auth); // Log out if trying to go to login page while logged in
+                showScreen('login-container');
+            }
+        };
 
         const handleAdminLogin = () => {
             const usernameInput = document.getElementById('admin-username');
             const passwordInput = document.getElementById('admin-password');
             
             if (usernameInput.value === 'Sachin' && passwordInput.value === '802165') {
-                showScreen('app-container');
-                showAppScreen('admin-dashboard-view');
-                loadAdminProducts();
-                
                 usernameInput.value = '';
                 passwordInput.value = '';
                 document.getElementById('admin-login-dropdown').classList.remove('show');
+                navigate('#admin');
             } else {
                 showToast('Invalid admin credentials!', true);
             }
         };
         
         const logoutAdmin = () => {
-            showScreen('login-container');
+            navigate('#login');
         };
 
         const showAddProductForm = () => {
@@ -565,10 +588,7 @@
         const handleAuthStateChange = (user) => {
             const authContainer = document.getElementById('user-auth-container');
             if (user) {
-                showScreen('app-container');
-                showAppScreen('user-view');
-                loadUserProducts();
-
+                navigate('#shop');
                 const photoURL = user.photoURL || `https://ui-avatars.com/api/?name=${user.email.split('@')[0]}&background=random`;
                 authContainer.innerHTML = `
                     <button id="profile-button">
@@ -606,7 +626,7 @@
                 
                 closeUserAuthModal();
             } else {
-                showScreen('login-container');
+                navigate('#login');
             }
         };
 
@@ -626,6 +646,9 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             applyTheme();
+            
+            window.addEventListener('popstate', router);
+            router(); // Initial call to handle the route on page load
 
             document.getElementById('initial-google-login-btn').addEventListener('click', handleGoogleLogin);
             document.getElementById('login-with-email-link').addEventListener('click', (e) => {
