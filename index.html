@@ -1,1161 +1,695 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-<meta name="google-site-verification" content="iPJ9gvz-pcq0qMUyfYB6cbjm11o3cwUVpMwtqDtXbVo" />
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SGS Product Shop</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    /* Global Styles & Reset */
-    * { 
-      box-sizing: border-box; 
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: 'Poppins', sans-serif; /* Modern font */
-      margin: 0;
-      padding: 0;
-      background: #eef2f6; /* Lighter, professional background */
-      color: #333; /* Darker text for readability */
-      line-height: 1.6;
-    }
-
-    /* Header Styling */
-    header {
-      background-color: #2c3e50; /* Darker, more premium header */
-      color: white;
-      padding: 20px 30px; /* More padding */
-      text-align: center;
-      font-size: 28px; /* Slightly larger title */
-      font-weight: 700; /* Bolder */
-      position: relative;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Subtle shadow */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    /* New: User info and logout button in header */
-    .header-user-info {
-        position: absolute;
-        left: 20px;
-        top: 50%;
-        transform: translateY(-50%);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: white;
-        font-size: 0.9em;
-        display: none; /* Hidden by default */
-    }
-    .header-user-info img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%; /* Circular image */
-        border: 2px solid #f0c14b; /* Highlight border */
-        object-fit: cover;
-    }
-    .header-user-info button {
-        background: #dc3545; /* Red for logout */
-        color: white;
-        padding: 5px 10px;
-        font-size: 0.8em;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-    .header-user-info button:hover {
-        background: #c82333;
-    }
-
-    .top-right-controls {
-      position: absolute;
-      right: 30px; /* More spacing from edge */
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      gap: 15px; /* Increased gap */
-      align-items: center;
-    }
-    .top-right-controls input {
-      padding: 8px 15px; /* More padding */
-      border-radius: 25px; /* Pill-shaped search bar */
-      border: 1px solid #556c8a; /* Subtle border */
-      font-size: 15px;
-      display: none;
-      background-color: #f9f9f9; /* Light background for input */
-      color: #333;
-      transition: all 0.3s ease; /* Smooth transition */
-    }
-    .top-right-controls input.show {
-      display: inline-block;
-      width: 200px; /* Defined width when shown */
-    }
-    .top-right-controls button {
-      background: #3498db; /* Professional blue button */
-      color: white; /* White text for contrast */
-      padding: 8px 18px; /* More padding */
-      font-weight: 600; /* Semi-bold */
-      border: none;
-      border-radius: 25px; /* Pill-shaped buttons */
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effects */
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .top-right-controls button:hover {
-      background: #2980b9; /* Darker blue on hover */
-      transform: translateY(-1px); /* Slight lift */
-    }
-    .search-icon {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 22px; /* Slightly larger icon */
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-    .search-icon:hover {
-      color: #f0c14b; /* Highlight on hover */
-    }
-
-    /* General Panel Styling */
-    #adminPanel, #productDetail, #cartPage {
-      display: none;
-      padding: 30px; /* More generous padding */
-      max-width: 1200px; /* Max width for content */
-      margin: 20px auto; /* Center content with margin */
-      background: white; /* White background for panels */
-      border-radius: 12px; /* Rounded corners */
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08); /* More pronounced shadow */
-      animation: fadeIn 0.6s ease-out; /* Smoother fade-in */
-    }
-    h2 {
-      color: #2c3e50; /* Matches header color */
-      margin-bottom: 25px; /* More space below headings */
-      text-align: center;
-      font-weight: 600;
-      font-size: 2em;
-    }
-    hr {
-      border: 0;
-      height: 1px;
-      background: #eee;
-      margin: 30px 0;
-    }
-
-    /* Login Panel Styling */
-    #loginPanel {
-      display: flex; /* Use flexbox for layout */
-      flex-direction: column; /* Stack items vertically */
-      align-items: center; /* Center items horizontally */
-      justify-content: center; /* Center items vertically */
-      min-height: 80vh; /* Make it take up most of the viewport height */
-      padding: 30px;
-      max-width: 500px; /* Max width for login box */
-      margin: 20px auto;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      animation: fadeIn 0.6s ease-out;
-    }
-    #loginPanel h2 {
-      margin-bottom: 20px;
-      font-size: 2.2em; /* Larger heading for login */
-      color: #2c3e50;
-    }
-    #loginPanel input {
-      width: 100%; /* Full width within the max-width of the panel */
-      max-width: 350px; /* Limit input width */
-      margin-bottom: 15px;
-      padding: 12px 15px;
-      border: 1px solid #dcdcdc;
-      border-radius: 8px;
-      font-size: 1em;
-    }
-    #loginPanel button {
-      width: 100%;
-      max-width: 350px; /* Match input width */
-      padding: 15px 20px; /* Larger padding for bigger buttons */
-      font-size: 1.2em; /* Larger font size */
-      font-weight: 600;
-      border: none;
-      border-radius: 8px; /* Slightly less rounded for a solid feel */
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* More prominent shadow */
-      letter-spacing: 0.5px; /* Subtle letter spacing */
-    }
-    #loginPanel button:hover {
-      transform: translateY(-2px); /* More pronounced lift */
-      box-shadow: 0 6px 15px rgba(0,0,0,0.15); /* Stronger shadow on hover */
-    }
-    /* Specific style for Admin Login button */
-    #loginPanel button[onclick="adminLogin()"] {
-      background: #f0c14b; /* Amazon-like yellow-orange */
-      color: #111; /* Dark text for contrast */
-      margin-bottom: 25px; /* More space below login button */
-    }
-    #loginPanel button[onclick="adminLogin()"]:hover {
-      background: #ddb347; /* Darker yellow-orange on hover */
-    }
-    /* Specific style for SHOP NOW button */
-    #loginPanel button[onclick="openUserPanel()"] {
-      background: #ff9900; /* Amazon's primary orange */
-      color: white; /* White text */
-      margin-top: 25px; /* Space above SHOP NOW */
-    }
-    #loginPanel button[onclick="openUserPanel()"]:hover {
-      background: #e68a00; /* Darker orange on hover */
-    }
-    /* Styles for new user login buttons */
-    #loginPanel .user-auth-section {
-        width: 100%;
-        max-width: 350px;
-        margin-top: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px; /* Space between auth buttons */
-    }
-    #loginPanel .user-auth-section button {
-        background-color: #4285F4; /* Google Blue */
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        padding: 12px 20px;
-        font-size: 1em; /* Slightly smaller for multiple options */
-        border-radius: 5px; /* Standard button corners */
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    #loginPanel .user-auth-section button:hover {
-        background-color: #357ae8;
-        transform: translateY(-1px);
-    }
-    #loginPanel .user-auth-section button.apple-btn {
-        background-color: #000; /* Apple Black */
-        color: white;
-    }
-    #loginPanel .user-auth-section button.apple-btn:hover {
-        background-color: #333;
-    }
-    #loginPanel .user-auth-section button.anonymous-btn {
-        background-color: #6c757d; /* Grey for anonymous */
-        color: white;
-    }
-    #loginPanel .user-auth-section button.anonymous-btn:hover {
-        background-color: #5a6268;
-    }
-    #loginPanel .auth-separator {
-        display: flex;
-        align-items: center;
-        text-align: center;
-        width: 100%;
-        max-width: 350px;
-        margin: 20px 0;
-        color: #888;
-    }
-    #loginPanel .auth-separator::before,
-    #loginPanel .auth-separator::after {
-        content: '';
-        flex: 1;
-        border-bottom: 1px solid #ddd;
-    }
-    #loginPanel .auth-separator:not(:empty)::before {
-        margin-right: .25em;
-    }
-    #loginPanel .auth-separator:not(:empty)::after {
-        margin-left: .25em;
-    }
-
-    /* User Panel (Home Page) Styling */
-    #userPanel {
-      display: none;
-      padding: 30px;
-      max-width: 1400px; /* Wider for more products per row */
-      margin: 20px auto;
-      background: #f8f9fa; /* Slightly off-white background for the main product area */
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05); /* Lighter shadow for the main area */
-      animation: fadeIn 0.6s ease-out;
-    }
-    #userPanel h2 {
-        margin-bottom: 30px; /* More space below heading */
-        color: #2c3e50;
-        font-size: 2.5em; /* Larger heading for the main product section */
-        font-weight: 700;
-    }
-
-    /* Product List & Card Styling */
-    #productList, #adminProductList, #cartItems {
-      display: grid; /* Use CSS Grid for better layout control */
-      /* Responsive grid: 1 column on small, 2 on medium, 3-4 on large */
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Increased min-width for larger cards */
-      gap: 30px; /* Increased gap between products */
-      justify-items: center; /* Center items in grid */
-    }
-    .product {
-      background: white;
-      padding: 20px; /* More padding inside each product card */
-      border-radius: 15px; /* More rounded corners for a softer look */
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* More prominent shadow for cards */
-      transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease; /* Smooth transitions for hover */
-      width: 100%; /* Occupy full grid column */
-      max-width: 280px; /* Increased max-width for individual product card */
-      display: flex; /* Flex for internal alignment */
-      flex-direction: column;
-      justify-content: space-between; /* Space out content */
-      overflow: hidden; /* Hide overflow for descriptions */
-      border: 1px solid #e0e0e0; /* Subtle border */
-      cursor: pointer; /* Indicate clickability */
-    }
-    .product:hover {
-      transform: translateY(-8px); /* More pronounced lift effect on hover */
-      box-shadow: 0 15px 30px rgba(0,0,0,0.2); /* Stronger, deeper shadow on hover */
-      border-color: #3498db; /* Highlight border on hover */
-    }
-    .product img {
-      width: 100%;
-      height: 180px; /* Larger image height */
-      object-fit: contain;
-      border-bottom: 1px solid #f0f0f0; /* Lighter border */
-      padding-bottom: 15px;
-      margin-bottom: 15px; /* More space below image */
-      border-radius: 10px; /* Rounded image corners */
-      background-color: #fff; /* Ensure image background is white */
-    }
-    .product h4 {
-      font-size: 1.3em; /* Larger title */
-      margin-bottom: 10px;
-      color: #2c3e50; /* Darker title color */
-      text-align: center;
-      font-weight: 600;
-      line-height: 1.3;
-    }
-    .product p {
-      font-size: 0.95em; /* Slightly larger body text */
-      color: #555;
-      margin-bottom: 8px;
-      text-align: center;
-    }
-    .product .price { /* Specific style for price */
-      color: #28a745; /* Green for price */
-      font-weight: 700;
-      font-size: 1.3em; /* Larger price font */
-      margin-top: 10px;
-      margin-bottom: 15px; /* More space below price */
-    }
-    .product p.show-more-toggle { /* Style for show more/less */
-      color: #007bff;
-      cursor: pointer;
-      font-size: 0.9em;
-      text-decoration: underline;
-      margin-top: 5px;
-      text-align: center;
-    }
-    .product p.description-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.5s ease-out; /* Smoother transition */
-      text-align: left; /* Align description left */
-      padding: 5px 0;
-      font-size: 0.9em;
-      color: #666;
-    }
-    .product .buttons { /* Buttons inside product cards */
-      margin-top: 20px; /* More space above buttons */
-      display: flex;
-      flex-direction: column; /* Stack buttons */
-      gap: 10px; /* Increased gap */
-    }
-    .product .buttons button {
-      width: 100%;
-      padding: 10px 15px; /* More padding for buttons */
-      font-size: 1em; /* Larger font size */
-      border-radius: 8px; /* Slightly less rounded */
-      background: #3498db;
-      color: white;
-      font-weight: 500;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-    .product .buttons button:hover {
-      background: #2980b9;
-      transform: translateY(-1px);
-    }
-    .product .buttons button:last-child { /* Specific style for Buy Now */
-        background: #f39c12; /* Orange for Buy Now */
-    }
-    .product .buttons button:last-child:hover {
-        background: #e67e22;
-    }
-
-    /* Product Detail Page */
-    #productDetail {
-      text-align: center;
-    }
-    #detailTitle {
-      font-size: 2.5em;
-      margin-bottom: 20px;
-      color: #2c3e50;
-    }
-    #productDetail .price {
-      font-size: 1.8em;
-      color: #28a745;
-      margin-bottom: 20px;
-      font-weight: 700;
-    }
-    #detailImages {
-      display: flex;
-      overflow-x: auto; /* Allow horizontal scrolling for images */
-      gap: 15px;
-      padding-bottom: 15px; /* Space for scrollbar */
-      scroll-snap-type: x mandatory; /* Snap to images */
-      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-      margin-bottom: 25px;
-    }
-    #detailImages img {
-      width: 100%;
-      min-width: 300px; /* Ensure images are a decent size */
-      max-height: 400px; /* Larger images for detail view */
-      object-fit: contain;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      scroll-snap-align: start;
-    }
-    #productDetail .buttons {
-      margin-top: 30px;
-      display: flex;
-      justify-content: center; /* Center buttons */
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-    #productDetail .buttons button {
-      min-width: 150px; /* Ensure buttons are a good size */
-      padding: 12px 25px; /* Larger padding */
-      font-size: 1.1em;
-      border-radius: 8px;
-    }
-    #productDetail #buyNowBtn {
-        background: #f39c12; /* Orange for Buy Now */
-        color: white;
-    }
-    #productDetail #buyNowBtn:hover {
-        background: #e67e22;
-    }
-    #productDetail button:last-child { /* Back button */
-      background: #95a5a6; /* Grey for back button */
-    }
-    #productDetail button:last-child:hover {
-      background: #7f8c8d;
-    }
-    #detailDescription {
-      text-align: left;
-      font-size: 1.1em;
-      color: #555;
-      margin-top: 20px;
-    }
-    #detailDescription p { /* For the toggleable description */
-        margin-bottom: 10px;
-    }
-    #detailDescription #toggleDescBtn {
-        background: #007bff;
-        color: white;
-        padding: 8px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-        margin-top: 10px;
-    }
-    #detailDescription #toggleDescBtn:hover {
-        background: #0056b3;
-    }
-
-    /* Form Elements */
-    input, textarea {
-      width: calc(100% - 20px); /* Adjust for padding */
-      max-width: 500px; /* Slightly wider forms */
-      margin-bottom: 15px; /* More space between inputs */
-      padding: 12px 15px; /* More padding */
-      border: 1px solid #dcdcdc; /* Lighter border */
-      border-radius: 8px; /* Rounded corners */
-      font-size: 1em;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-      background-color: #fcfcfc;
-    }
-    input:focus, textarea:focus {
-      border-color: #3498db; /* Highlight on focus */
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); /* Soft blue shadow on focus */
-      outline: none;
-    }
-    textarea {
-      min-height: 100px; /* Taller textarea */
-      resize: vertical; /* Allow vertical resizing */
-    }
-
-    /* Admin Panel Specific */
-    #adminPanel button {
-      margin-top: 10px;
-      margin-right: 10px; /* Space between admin buttons */
-    }
-
-    /* Cart Page Specific */
-    #cartPage .product {
-        margin-bottom: 20px; /* Space between cart items */
-    }
-    #cartPage .product .buttons {
-        margin-top: 10px;
-    }
-    #cartPage > button { /* Back to Shop button on cart page */
-        margin-top: 30px;
-        background: #6c757d;
-        color: white;
-        padding: 12px 25px;
-        border-radius: 8px;
-        font-size: 1.1em;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    #cartPage > button:hover {
-        background: #5a6268;
-    }
-
-    /* Animations */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Responsive Adjustments */
-    @media (max-width: 1024px) {
-        #productList, #adminProductList, #cartItems {
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 25px;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sachin's T-Shirt Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            transition: background-color 0.3s, color 0.3s;
         }
-        .product {
-            max-width: 250px;
+        .view { display: none; }
+        .active-view { display: block; }
+        .color-swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
         }
-    }
-
-    @media (max-width: 768px) {
-      header {
-        font-size: 22px;
-        padding: 15px 10px;
-      }
-      .top-right-controls {
-        position: static; /* Stack controls on smaller screens */
-        transform: none;
-        margin-top: 10px;
-        justify-content: center;
-        width: 100%;
-      }
-      .top-right-controls input.show {
-        width: 100%; /* Full width search on mobile */
-      }
-      #adminPanel, #userPanel, #productDetail, #cartPage, #loginPanel {
-        padding: 15px;
-        margin: 10px auto;
-      }
-      #loginPanel button { /* Adjust button size for mobile login panel */
-        padding: 12px 15px;
-        font-size: 1em;
-      }
-      #productList, #adminProductList, #cartItems {
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Smaller cards on mobile */
-        gap: 15px;
-      }
-      .product {
-        padding: 10px;
-        max-width: none; /* Allow products to fill available width */
-      }
-      .product img {
-        height: 100px;
-      }
-      #productDetail #detailImages img {
-        min-width: 250px;
-        max-height: 300px;
-      }
-      h2 {
-        font-size: 1.8em;
-      }
-      #detailTitle {
-        font-size: 2em;
-      }
-      .header-user-info { /* Adjust for mobile */
-          left: 10px;
-          gap: 5px;
-          font-size: 0.8em;
-      }
-      .header-user-info img {
-          width: 30px;
-          height: 30px;
-      }
-      .header-user-info button {
-          padding: 3px 6px;
-          font-size: 0.7em;
-      }
-    }
-  </style>
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script> <!-- Added Firebase Auth SDK -->
+        .color-swatch:hover, .color-swatch.selected {
+            transform: scale(1.2);
+            border-color: #3b82f6; /* blue-500 */
+        }
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 8px;
+            background-color: #22c55e;
+            color: white;
+            font-weight: 500;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
+        }
+        #toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -20px);
+        }
+        #admin-login-dropdown {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            padding: 0;
+        }
+        #admin-login-dropdown.show {
+            max-height: 300px;
+            padding: 1rem;
+        }
+        /* Dark Mode Styles */
+        .dark, .dark body { background-color: #111827; color: #f3f4f6; }
+        .dark .bg-white { background-color: #1f2937; }
+        .dark .bg-gray-50 { background-color: #374151; }
+        .dark .bg-gray-100 { background-color: #111827; }
+        .dark .text-gray-800 { color: #f9fafb; }
+        .dark .text-gray-600 { color: #d1d5db; }
+        .dark .text-gray-500 { color: #9ca3af; }
+        .dark .border-gray-300 { border-color: #4b5563; }
+        .dark .border-b { border-color: #374151; }
+        .dark input, .dark textarea { background-color: #374151; color: #f9fafb; border-color: #4b5563; }
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.2); }
+        .dark .product-card { border: 1px solid #374151; }
+        .dark #profile-dropdown { background-color: #374151; }
+        .dark .hover\:bg-gray-100:hover { background-color: #4b5563; }
+        .dark ::-webkit-file-upload-button { background: #4b5563; color: #f9fafb; border: none; }
+        .dot { transition: transform 0.3s ease; }
+        .dark .dot { transform: translateX(1rem); }
+    </style>
 </head>
-<body>
-  <header>
-    <div class="header-user-info" id="headerUserInfo">
-        <img id="userProfilePic" src="" alt="User Profile" style="display:none;">
-        <span id="userNameDisplay" style="display:none;"></span>
-        <button onclick="logout()">Logout</button>
-    </div>
-    SGS PRODUCT SHOP
-    <div class="top-right-controls">
-      <button class="search-icon" onclick="toggleSearch()">
-        <i class="fas fa-search"></i>
-      </button>
-      <input type="text" id="searchInput" placeholder="Search Product..." oninput="filterProducts()" />
-      <button onclick="viewCartPage()">
-        <i class="fas fa-shopping-cart"></i> View My Cart
-      </button>
-    </div>
-  </header>
+<body class="bg-gray-100 text-gray-800">
 
-  <div id="loginPanel">
-    <h2>Admin Login</h2>
-    <input type="text" id="adminId" placeholder="Admin ID" />
-    <input type="password" id="adminPass" placeholder="Password" />
-    <button onclick="adminLogin()">Login</button>
-    <hr />
-    <h2>User Login / Sign Up</h2>
-    <input type="email" id="userEmail" placeholder="Email" />
-    <input type="password" id="userPassword" placeholder="Password" />
-    <button onclick="userLogin()">Login</button>
-    <button onclick="userSignUp()" style="background:#28a745;">Sign Up</button> <!-- Green for Sign Up -->
-
-    <div class="auth-separator">OR</div>
-
-    <div class="user-auth-section">
-        <button onclick="signInWithGoogle()">
-            <i class="fab fa-google"></i> Login with Google
-        </button>
-        <button onclick="signInWithApple()" class="apple-btn">
-            <i class="fab fa-apple"></i> Login with Apple
-        </button>
-        <button onclick="signInAnonymouslyUser()" class="anonymous-btn">
-            <i class="fas fa-user-secret"></i> Continue Anonymously
-        </button>
-    </div>
-  </div>
-
-  <div id="adminPanel">
-    <h2>Admin Panel</h2>
-    <input type="text" id="productTitle" placeholder="Product Title" /><br />
-    <textarea id="productDescription" placeholder="Description"></textarea><br />
-    <input type="text" id="affiliateLink" placeholder="Affiliate Buy Link" /><br />
-    <input type="file" id="productImages" multiple accept="image/*" /><br />
-    <button onclick="addProduct()">Add Product</button>
-    <div id="adminProductList"></div>
-    <button onclick="logout()">Logout</button>
-  </div>
-
-  <div id="userPanel">
-    <h2>All Products</h2>
-    <div id="productList"></div>
-  </div>
-
-  <div id="productDetail">
-    <h2 id="detailTitle"></h2>
-    <p class="price" id="detailPrice"></p> <!-- Added for detail price -->
-    <div class="slider" id="detailImages"></div>
-    <div class="buttons">
-      <button onclick="addToCart()">Add to Cart</button>
-      <button id="buyNowBtn">Buy Now</button>
-      <button onclick="backToShop()">Back</button>
-    </div>
-    <div id="detailDescription"></div> <!-- Changed to div for structured toggle -->
-  </div>
-
-  <div id="cartPage">
-    <h2>Your Cart</h2>
-    <div id="cartItems"></div>
-    <button onclick="backToShop()">Back to Shop</button>
-  </div>
-
-  <script>
-    // Firebase Configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyAKp7o0HzRioOELQZwRU7WKkdmWFLtwyuY",
-      authDomain: "sachin-bda88.firebaseapp.com",
-      databaseURL: "https://sachin-bda88-default-rtdb.firebaseio.com",
-      projectId: "sachin-bda88",
-      storageBucket: "sachin-bda88.appspot.com",
-      messagingSenderId: "371431713702",
-      appId: "1:371431713702:web:8ccbc31a741dae58433d67"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    const auth = firebase.auth(); // Initialize Firebase Authentication
-
-    let products = [];
-    let selectedProduct = null;
-    let cart = [];
-    let currentUser = null; // To store the currently authenticated user
-    let userCartRef = null; // Reference to the user-specific cart in Firebase Realtime Database
-
-    // Listener for Firebase Auth state changes
-    auth.onAuthStateChanged(user => {
-      const headerUserInfo = document.getElementById('headerUserInfo');
-      const userProfilePic = document.getElementById('userProfilePic');
-      const userNameDisplay = document.getElementById('userNameDisplay');
-
-      if (user) {
-        // User is signed in.
-        currentUser = user;
-        console.log("User logged in:", user.uid, user.email || "Anonymous");
-
-        // Display user info in header
-        headerUserInfo.style.display = 'flex';
-        if (user.photoURL) {
-            userProfilePic.src = user.photoURL;
-            userProfilePic.style.display = 'block';
-        } else {
-            userProfilePic.style.display = 'none'; // Hide if no photo
-        }
-        userNameDisplay.innerText = user.displayName || user.email || 'Guest';
-        userNameDisplay.style.display = 'block';
-
-        // Set up user-specific cart reference in Realtime Database
-        // Data will be stored under /users/<UID>/cart
-        userCartRef = db.ref('users/' + user.uid + '/cart');
-        
-        // Listen for changes to the user's cart in Firebase
-        userCartRef.on('value', (snapshot) => {
-          cart = snapshot.val() || []; // Update local cart with Firebase data
-          console.log("Cart loaded from Firebase:", cart);
-          // If the cart page is currently displayed, re-render it to show updated items
-          if (document.getElementById('cartPage').style.display === 'block') {
-              viewCartPage();
-          }
-        });
-
-        // Hide login panel and show user panel automatically on successful login
-        document.getElementById('loginPanel').style.display = 'none';
-        document.getElementById('userPanel').style.display = 'block';
-
-      } else {
-        // User is signed out.
-        currentUser = null;
-        console.log("User logged out.");
-        cart = []; // Clear local cart when user logs out
-
-        // Hide user info in header
-        headerUserInfo.style.display = 'none';
-        userProfilePic.src = '';
-        userProfilePic.style.display = 'none';
-        userNameDisplay.innerText = '';
-        userNameDisplay.style.display = 'none';
-
-        // Detach the Firebase cart listener if it was active
-        if (userCartRef) {
-          userCartRef.off();
-          userCartRef = null;
-        }
-
-        // Reset UI to show login panel and hide other panels
-        document.getElementById('userPanel').style.display = 'none';
-        document.getElementById('adminPanel').style.display = 'none';
-        document.getElementById('productDetail').style.display = 'none';
-        document.getElementById('cartPage').style.display = 'none';
-        document.getElementById('loginPanel').style.display = 'flex'; // Show login panel
-      }
-    });
-
-    // Listen for product data changes from Firebase Realtime Database
-    firebase.database().ref('products').on('value', (snapshot) => {
-      products = snapshot.val() || [];
-      showUserProducts();
-      showAdminProducts();
-    });
-
-    // Admin Login Function (remains local for simplicity as per original code)
-    function adminLogin() {
-      const id = document.getElementById('adminId').value;
-      const pass = document.getElementById('adminPass').value;
-      if (id === 'Sachin' && pass === '802165') {
-        document.getElementById('loginPanel').style.display = 'none';
-        document.getElementById('adminPanel').style.display = 'block';
-      } else {
-        alert('Invalid Admin Credentials');
-      }
-    }
-
-    // User Sign Up with Email and Password
-    function userSignUp() {
-      const email = document.getElementById('userEmail').value;
-      const password = document.getElementById('userPassword').value;
-      if (!email || !password) { 
-        alert('Please enter both email and password for sign up.'); 
-        return; 
-      }
-      auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          alert('User signed up successfully! You are now logged in.');
-          // onAuthStateChanged will handle UI update automatically
-        })
-        .catch((error) => {
-          alert('Error signing up: ' + error.message);
-        });
-    }
-
-    // User Login with Email and Password
-    function userLogin() {
-      const email = document.getElementById('userEmail').value;
-      const password = document.getElementById('userPassword').value;
-      if (!email || !password) { 
-        alert('Please enter both email and password for login.'); 
-        return; 
-      }
-      auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          alert('User logged in successfully!');
-          // onAuthStateChanged will handle UI update automatically
-        })
-        .catch((error) => {
-          alert('Error logging in: ' + error.message);
-        });
-    }
-
-    // Sign In with Google
-    function signInWithGoogle() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider)
-        .then((result) => {
-          alert('Signed in with Google!');
-          // onAuthStateChanged will handle UI update automatically
-        })
-        .catch((error) => {
-          alert('Error signing in with Google: ' + error.message);
-        });
-    }
-
-    // Sign In with Apple (Placeholder - requires specific Apple Developer setup)
-    function signInWithApple() {
-      alert('Apple login is not fully implemented in this demo. It requires specific Apple Developer account setup and a secure backend for production use.');
-      // For a real application, you would use:
-      // const provider = new firebase.auth.AppleAuthProvider();
-      // auth.signInWithPopup(provider)
-      //   .then((result) => { /* Handle success */ })
-      //   .catch((error) => { /* Handle error */ });
-    }
-
-    // Sign In Anonymously
-    function signInAnonymouslyUser() {
-      auth.signInAnonymously()
-        .then(() => {
-          alert('Continued as Anonymous User!');
-          // onAuthStateChanged will handle UI update automatically
-        })
-        .catch((error) => {
-          alert('Error continuing anonymously: ' + error.message);
-        });
-    }
-
-    // Logout function (now uses Firebase Auth signOut)
-    function logout() {
-      auth.signOut().then(() => {
-        alert('Logged out successfully!');
-        // onAuthStateChanged will handle UI reset and redirect to login panel
-      }).catch((error) => {
-        alert('Error logging out: ' + error.message);
-      });
-    }
-
-    // Function to open the user panel (now primarily triggered by onAuthStateChanged)
-    function openUserPanel() {
-      // This function is still here for the "SHOP NOW" button, but actual panel display
-      // is primarily managed by onAuthStateChanged after any successful login.
-      // If a user clicks "SHOP NOW" without logging in, they will be redirected to the login options.
-      if (!currentUser) { // If not logged in, show login options instead of directly opening user panel
-          document.getElementById('loginPanel').style.display = 'flex';
-          document.getElementById('userPanel').style.display = 'none';
-          alert('Please login or continue anonymously to shop.');
-      } else {
-          document.getElementById('loginPanel').style.display = 'none';
-          document.getElementById('userPanel').style.display = 'block';
-      }
-    }
-
-    // Add Product Function (Admin Panel)
-    function addProduct() {
-      const title = document.getElementById('productTitle').value;
-      const description = document.getElementById('productDescription').value;
-      const affiliateLink = document.getElementById('affiliateLink').value;
-      const files = document.getElementById('productImages').files;
-      const price = prompt("Enter Price ₹"); // Keep prompt for price
-
-      if (!title || !affiliateLink || files.length === 0 || !price) return alert('All fields required');
-
-      const images = [];
-      let filesProcessed = 0; // Counter for async image loading
-      if (files.length === 0) { // Handle case with no files but other data
-        const newProduct = { title, description, affiliateLink, images: [], price };
-        products.push(newProduct);
-        firebase.database().ref('products').set(products);
-        alert('Product Added with Price ₹' + price);
-        return;
-      }
-
-      for (let file of files) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          images.push(e.target.result);
-          filesProcessed++;
-          if (filesProcessed === files.length) { // Check if all files are processed
-            const newProduct = { title, description, affiliateLink, images, price };
-            products.push(newProduct);
-            firebase.database().ref('products').set(products);
-            alert('Product Added with Price ₹' + price);
-          }
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-
-    // Display products in Admin Panel
-    function showAdminProducts() {
-      const container = document.getElementById('adminProductList');
-      container.innerHTML = '';
-      products.forEach((product, index) => {
-        container.innerHTML += `
-          <div class="product">
-            <img src="${product.images[0] || 'https://via.placeholder.com/150?text=No+Image'}" alt="${product.title}" />
-            <h4>${product.title}</h4>
-            <p class="price">₹${product.price || '0'}</p>
-            <button onclick="deleteProduct(${index})">Delete</button>
-          </div>`;
-      });
-    }
-
-    // Delete Product Function (Admin Panel)
-    function deleteProduct(i) {
-      if (confirm("Are you sure you want to delete this product?")) { // Confirmation dialog
-        products.splice(i, 1);
-        firebase.database().ref('products').set(products);
-      }
-    }
-
-    // Display products in User Panel (Home Page)
-    function showUserProducts(filtered = products) {
-      const container = document.getElementById('productList');
-      container.innerHTML = '';
-      if (filtered.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#666; font-size:1.2em; margin-top:50px;">No products found matching your criteria.</p>';
-        return;
-      }
-      filtered.forEach((product, index) => {
-        container.innerHTML += `
-          <div class="product" onclick="viewDetail(${products.indexOf(product)})"> <!-- Use original index -->
-            <img src="${product.images[0] || 'https://via.placeholder.com/150?text=No+Image'}" alt="${product.title}" />
-            <h4>${product.title}</h4>
-            <p class="price">₹${product.price || '0'}</p>
-            <p class="show-more-toggle" onclick="toggleDescription(this, event)">Show More</p>
-            <p class="description-content">${product.description}</p>
-          </div>`;
-      });
-    }
-
-    // View Product Detail Page
-    function viewDetail(index) {
-      selectedProduct = products[index];
-      document.getElementById('userPanel').style.display = 'none';
-      document.getElementById('productDetail').style.display = 'block';
-      document.getElementById('detailTitle').innerText = selectedProduct.title;
-      document.getElementById('detailPrice').innerText = `₹${selectedProduct.price || '0'}`; // Set price
-      
-      const imgContainer = document.getElementById('detailImages');
-      imgContainer.innerHTML = '';
-      if (selectedProduct.images && selectedProduct.images.length > 0) {
-        selectedProduct.images.forEach(img => {
-          imgContainer.innerHTML += `<img src="${img}" alt="${selectedProduct.title}" />`;
-        });
-      } else {
-        imgContainer.innerHTML = `<img src="https://via.placeholder.com/400x250?text=No+Image" alt="No Image" />`;
-      }
-
-      document.getElementById('buyNowBtn').onclick = () => {
-        window.open(selectedProduct.affiliateLink, '_blank');
-      };
-      history.pushState({}, ''); // For back button functionality
-      setTimeout(setupDescriptionToggle, 50); // Small delay to ensure DOM is ready
-    }
-
-    // Navigate back to Shop (User Panel)
-    function backToShop() {
-      document.getElementById('productDetail').style.display = 'none';
-      document.getElementById('cartPage').style.display = 'none';
-      document.getElementById('userPanel').style.display = 'block';
-    }
-
-    // Add Product to Cart (now saves to Firebase)
-    function addToCart() {
-      if (!currentUser) {
-        alert("Please log in or continue anonymously to add items to cart.");
-        return;
-      }
-      if (selectedProduct) {
-        cart.push(selectedProduct);
-        // Save cart to Firebase Realtime Database under the user's UID
-        userCartRef.set(cart) 
-          .then(() => alert(`"${selectedProduct.title}" added to cart!`))
-          .catch(error => alert("Error adding to cart: " + error.message));
-      } else {
-        alert("No product selected to add to cart.");
-      }
-    }
-
-    // View Cart Page
-    function viewCartPage() {
-      if (!currentUser) {
-        alert("Please log in or continue anonymously to view your cart.");
-        return;
-      }
-      if (cart.length === 0) {
-        alert("Your cart is empty!");
-        return;
-      }
-      document.getElementById('userPanel').style.display = 'none';
-      document.getElementById('productDetail').style.display = 'none';
-      document.getElementById('cartPage').style.display = 'block';
-
-      const container = document.getElementById("cartItems");
-      container.innerHTML = '';
-      cart.forEach((item, i) => {
-        container.innerHTML += `
-          <div class="product">
-            <img src="${item.images[0] || 'https://via.placeholder.com/150?text=No+Image'}" alt="${item.title}" />
-            <h4>${item.title}</h4>
-            <p class="price">₹${item.price || '0'}</p>
-            <p class="show-more-toggle" onclick="toggleDescription(this, event)">Show More</p>
-            <p class="description-content">${item.description}</p>
-            <div class="buttons">
-              <button onclick="removeItemFromCart(${i})" style="background:#dc3545;">Remove</button> <!-- Remove button -->
-              <button onclick="window.open('${item.affiliateLink}', '_blank')">Buy Now</button>
+    <div id="app" class="container mx-auto p-4 max-w-7xl">
+        <div id="role-selection-view" class="view active-view min-h-screen flex items-center justify-center">
+            <div class="text-center bg-white p-10 rounded-xl shadow-lg w-full max-w-lg">
+                <h1 class="text-4xl font-bold mb-2 text-gray-800">Welcome to the Store</h1>
+                <p class="text-gray-500 mb-8">Login to start shopping or access the admin panel.</p>
+                <div class="flex flex-col gap-4 justify-center">
+                    <button id="initial-google-login-btn" class="w-full bg-white border border-gray-300 text-gray-700 font-semibold py-3 px-8 rounded-lg hover:bg-gray-50 flex items-center justify-center transition duration-300">
+                        <img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5 mr-3"> Continue with Google
+                    </button>
+                    <p class="text-sm text-gray-500">Or <a href="#" id="login-with-email-link" class="text-blue-600 font-semibold hover:underline">login with Email/Password</a></p>
+                </div>
+                <div class="mt-8 border-t pt-6">
+                    <a href="#" id="toggle-admin-login-btn" class="text-sm text-gray-600 hover:text-blue-600 hover:underline">Admin Login</a>
+                    <div id="admin-login-dropdown" class="mt-2 bg-gray-50 rounded-lg text-left">
+                         <div class="space-y-3">
+                            <input id="admin-username" type="text" placeholder="Username" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input id="admin-password" type="password" placeholder="Password" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button id="admin-login-btn" class="w-full bg-gray-800 text-white font-bold py-2 rounded-lg hover:bg-gray-900 transition duration-300">Login</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>`;
-      });
-    }
+        </div>
 
-    // Remove Item from Cart (now updates Firebase)
-    function removeItemFromCart(index) {
-        if (!currentUser) {
-            alert("Please log in to manage your cart.");
-            return;
-        }
-        if (confirm("Are you sure you want to remove this item from your cart?")) {
-            cart.splice(index, 1);
-            // Update cart in Firebase Realtime Database
-            userCartRef.set(cart) 
-                .then(() => {
-                    viewCartPage(); // Re-render cart
-                    if (cart.length === 0) {
-                        alert("Your cart is now empty!");
-                        backToShop();
+        <div id="admin-dashboard-view" class="view">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b">
+                <h2 class="text-4xl font-bold">Admin Dashboard</h2>
+                <div>
+                    <button id="show-add-product-form-btn" class="bg-green-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-600 transition duration-300"><i class="fas fa-plus mr-2"></i>Add Product</button>
+                    <button id="admin-logout-btn" class="bg-red-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-600 transition duration-300 ml-4"><i class="fas fa-sign-out-alt mr-2"></i>Logout</button>
+                </div>
+            </div>
+            <div id="product-form-container" class="bg-white p-8 rounded-xl shadow-md mb-8" style="display: none;">
+                <h3 id="form-title" class="text-2xl font-bold mb-6">Add New Product</h3>
+                <form id="product-form" class="space-y-4">
+                    <input type="hidden" id="product-id">
+                    <input id="product-title" type="text" placeholder="Product Title" class="w-full p-3 border rounded-lg" required>
+                    <textarea id="product-desc" placeholder="Product Description" class="w-full p-3 border rounded-lg" rows="3" required></textarea>
+                    <input id="product-price" type="number" placeholder="Price (INR)" class="w-full p-3 border rounded-lg" required>
+                    <input id="product-buy-link" type="url" placeholder="Buy Now Link (e.g., Razorpay)" class="w-full p-3 border rounded-lg">
+                    
+                    <div id="color-inputs-container" class="space-y-3 p-4 border rounded-lg bg-gray-50"><h4 class="font-semibold">Product Colors & Images</h4></div>
+                    <button type="button" id="add-color-btn" class="text-sm bg-blue-100 text-blue-700 font-semibold py-2 px-4 rounded-lg hover:bg-blue-200">+ Add Another Color</button>
+                    <div class="flex space-x-4 pt-4">
+                        <button type="submit" id="save-product-btn" class="flex-grow bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center">
+                            <span class="btn-text">Save Product</span>
+                            <i class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                        </button>
+                        <button type="button" id="cancel-product-form-btn" class="flex-grow bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <div id="admin-product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+
+        <div id="user-view" class="view">
+            <div class="flex justify-between items-center mb-8 pb-4 border-b flex-wrap gap-4">
+                <div id="header-title" class="flex items-center space-x-2 cursor-pointer">
+                    <i class="fas fa-tshirt text-3xl text-blue-600"></i>
+                    <h1 class="text-3xl font-bold">T-Shirt Store</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div id="user-auth-container" class="relative"></div>
+                    <button id="show-cart-btn" class="relative bg-white p-3 rounded-full shadow hover:bg-gray-200 transition">
+                        <i class="fas fa-shopping-cart text-xl text-gray-700"></i>
+                        <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </button>
+                </div>
+            </div>
+            <div id="user-product-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
+        </div>
+
+        <div id="user-auth-modal" class="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center" style="display: none;">
+            <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md relative">
+                <button id="close-auth-modal-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+                <div id="email-login-view">
+                    <h3 class="text-2xl font-bold mb-4 text-center">Login</h3>
+                    <input id="login-email" type="email" placeholder="Email" class="w-full p-3 mb-3 border rounded-lg">
+                    <input id="login-password" type="password" placeholder="Password" class="w-full p-3 mb-4 border rounded-lg">
+                    <button id="email-login-btn" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 mb-3">Login</button>
+                    <p class="text-center text-sm">Don't have an account? <a href="#" id="goto-signup-link" class="text-blue-600 font-semibold">Sign Up</a></p>
+                </div>
+                <div id="email-signup-view" style="display:none;">
+                    <h3 class="text-2xl font-bold mb-4 text-center">Sign Up</h3>
+                    <input id="signup-email" type="email" placeholder="Email" class="w-full p-3 mb-3 border rounded-lg">
+                    <input id="signup-password" type="password" placeholder="Password" class="w-full p-3 mb-4 border rounded-lg">
+                    <button id="email-signup-btn" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 mb-3">Create Account</button>
+                    <p class="text-center text-sm">Already have an account? <a href="#" id="goto-login-link" class="text-blue-600 font-semibold">Login</a></p>
+                </div>
+                <div class="flex items-center my-6"><hr class="flex-grow border-t border-gray-300"><span class="px-3 text-gray-500">OR</span><hr class="flex-grow border-t border-gray-300"></div>
+                <div class="space-y-3">
+                    <button id="google-login-btn" class="w-full flex items-center justify-center bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-50"><img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5 mr-3"> Continue with Google</button>
+                    <button id="apple-login-btn" class="w-full flex items-center justify-center bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-800"><i class="fab fa-apple mr-3 text-xl"></i> Continue with Apple</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center" style="display: none;">
+            <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-2xl">
+                <div class="flex justify-between items-center border-b pb-4 mb-4"><h2 class="text-2xl font-bold">Your Cart</h2><button id="hide-cart-btn" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button></div>
+                <div id="cart-items" class="max-h-96 overflow-y-auto mb-4"></div>
+                <div id="cart-footer" class="border-t pt-4" style="display: none;"><div class="flex justify-between items-center font-bold text-xl mb-4"><span>Total:</span><span id="cart-total">₹0.00</span></div><button class="w-full bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600 transition">Proceed to Checkout</button></div>
+                <div id="empty-cart-message" class="text-center py-12" style="display: none;"><i class="fas fa-shopping-cart text-5xl text-gray-300 mb-4"></i><p class="text-gray-500">Your cart is empty.</p></div>
+            </div>
+        </div>
+        
+        <div id="toast"></div>
+    </div>
+
+    <script type="module">
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKp7o0HzRioOELQZwRU7WKkdmWFLtwyuY",
+            authDomain: "sachin-bda88.firebaseapp.com",
+            databaseURL: "https://sachin-bda88-default-rtdb.firebaseio.com",
+            projectId: "sachin-bda88",
+            storageBucket: "sachin-bda88.firebasestorage.app",
+            messagingSenderId: "371431713702",
+            appId: "1:371431713702:web:8ccbc31a741dae58433d67"
+        };
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getDatabase, ref, set, get, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-storage.js";
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+        const storage = getStorage(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        let currentView = 'role-selection-view';
+        let cart = [];
+        let allProducts = {};
+
+        const applyTheme = () => {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        };
+
+        const toggleDarkMode = () => {
+            if (localStorage.getItem('theme') === 'dark') {
+                localStorage.setItem('theme', 'light');
+            } else {
+                localStorage.setItem('theme', 'dark');
+            }
+            applyTheme();
+        };
+
+        const showToast = (message, isError = false) => {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'show';
+            toast.style.backgroundColor = isError ? '#ef4444' : '#22c55e';
+            setTimeout(() => { toast.className = toast.className.replace('show', ''); }, 3000);
+        };
+
+        const showView = (viewId) => {
+            document.getElementById(currentView)?.classList.remove('active-view');
+            document.getElementById(viewId)?.classList.add('active-view');
+            currentView = viewId;
+            if (viewId === 'user-view') {
+                loadUserProducts();
+            }
+        };
+
+        const handleAdminLogin = () => {
+            const usernameInput = document.getElementById('admin-username');
+            const passwordInput = document.getElementById('admin-password');
+            
+            if (usernameInput.value === 'Sachin' && passwordInput.value === '802165') {
+                showView('admin-dashboard-view');
+                document.getElementById('admin-login-dropdown').classList.remove('show');
+                usernameInput.value = '';
+                passwordInput.value = '';
+            } else {
+                showToast('Invalid admin credentials!', true);
+            }
+        };
+        
+        const logoutAdmin = () => {
+            showView('role-selection-view');
+        };
+
+        const showAddProductForm = () => {
+            document.getElementById('product-form').reset();
+            document.getElementById('product-id').value = '';
+            document.getElementById('form-title').innerText = 'Add New Product';
+            document.getElementById('color-inputs-container').innerHTML = '<h4 class="font-semibold">Product Colors & Images</h4>';
+            addColorInput();
+            document.getElementById('product-form-container').style.display = 'block';
+        };
+
+        const hideProductForm = () => document.getElementById('product-form-container').style.display = 'none';
+
+        const addColorInput = () => {
+            const container = document.getElementById('color-inputs-container');
+            const colorInputDiv = document.createElement('div');
+            colorInputDiv.className = 'grid grid-cols-1 md:grid-cols-3 gap-2 items-center p-2 border-t';
+            colorInputDiv.innerHTML = `
+                <input type="text" placeholder="Color Name (e.g., Black)" class="color-name-input p-2 border rounded-lg text-sm" required>
+                <input type="file" class="image-file-input text-sm">
+                <div class="flex items-center">
+                    <input type="url" placeholder="Or Image URL" class="image-url-input flex-1 p-2 border rounded-lg text-sm">
+                    <button type="button" class="remove-color-btn bg-red-100 text-red-600 px-2 py-1 rounded-md text-xs font-bold ml-2">X</button>
+                </div>
+            `;
+            container.appendChild(colorInputDiv);
+        };
+
+        const handleProductFormSubmit = async (e) => {
+            e.preventDefault();
+            const saveBtn = document.getElementById('save-product-btn');
+            saveBtn.disabled = true;
+            saveBtn.querySelector('.fa-spinner').classList.remove('hidden');
+            saveBtn.querySelector('.btn-text').classList.add('hidden');
+
+            try {
+                const productId = document.getElementById('product-id').value;
+                const title = document.getElementById('product-title').value;
+                const description = document.getElementById('product-desc').value;
+                const price = parseFloat(document.getElementById('product-price').value);
+                const buyLink = document.getElementById('product-buy-link').value;
+
+                const colorInputs = document.querySelectorAll('#color-inputs-container > div.grid');
+                
+                const uploadPromises = Array.from(colorInputs).map(async (div) => {
+                    const colorNameInput = div.querySelector('.color-name-input');
+                    const fileInput = div.querySelector('.image-file-input');
+                    const urlInput = div.querySelector('.image-url-input');
+                    
+                    const colorName = colorNameInput.value.trim();
+                    if (!colorName) return null;
+
+                    let imageUrl = urlInput.value.trim();
+                    const file = fileInput.files[0];
+
+                    if (file) {
+                        const filePath = `products/${Date.now()}-${file.name}`;
+                        const fileRef = storageRef(storage, filePath);
+                        await uploadBytes(fileRef, file);
+                        imageUrl = await getDownloadURL(fileRef);
                     }
-                })
-                .catch(error => alert("Error removing from cart: " + error.message));
-        }
-    }
 
-    // Filter Products by Search Input
-    function filterProducts() {
-      const search = document.getElementById("searchInput").value.toLowerCase();
-      const filtered = products.filter(p => 
-        p.title.toLowerCase().includes(search) || 
-        (p.description && p.description.toLowerCase().includes(search))
-      );
-      showUserProducts(filtered);
-    }
+                    if (!imageUrl) return null;
+                    return { colorName, imageUrl };
+                });
 
-    // Toggle Search Input Visibility
-    function toggleSearch() {
-      const input = document.getElementById('searchInput');
-      input.classList.toggle('show');
-      if (input.classList.contains('show')) {
-        input.focus();
-      } else {
-        input.value = ''; // Clear search when hidden
-        filterProducts(); // Reset products display
-      }
-    }
+                const resolvedColors = (await Promise.all(uploadPromises)).filter(c => c !== null);
 
-    // Toggle Description (Show More/Less) for product list items
-    function toggleDescription(el, event) {
-      event.stopPropagation(); // Prevent parent click from triggering viewDetail
-      const para = el.nextElementSibling; // This is the actual description content paragraph
-      if (para.style.maxHeight && para.style.maxHeight !== '0px') {
-        para.style.maxHeight = null;
-        el.innerText = 'Show More';
-      } else {
-        para.style.maxHeight = para.scrollHeight + 'px';
-        el.innerText = 'Show Less';
-      }
-    }
+                if (resolvedColors.length === 0) {
+                    throw new Error('Please add at least one valid color with an image (file or URL).');
+                }
 
-    // Setup Description Toggle for Product Detail Page
-    function setupDescriptionToggle() {
-      const descDiv = document.getElementById("detailDescription");
-      const fullText = selectedProduct.description || ''; // Use selectedProduct's description
-      
-      descDiv.innerHTML = ''; // Clear previous content
+                const colors = resolvedColors.reduce((acc, { colorName, imageUrl }) => {
+                    acc[colorName] = imageUrl;
+                    return acc;
+                }, {});
 
-      if (fullText.length <= 150) { // Adjust character limit for detail page
-        descDiv.innerHTML = `<p>${fullText}</p>`;
-        return;
-      }
+                const productData = { 
+                    title, 
+                    description, 
+                    price, 
+                    buyLink,
+                    colors, 
+                    defaultImage: resolvedColors[0].imageUrl 
+                };
 
-      const shortText = fullText.slice(0, 150) + "...";
+                const dbRef = productId ? ref(db, 'products/' + productId) : push(ref(db, 'products'));
+                const operation = productId ? update : set;
 
-      descDiv.innerHTML = `
-        <p id="shortDesc">${shortText}</p>
-        <p id="fullDesc" style="display:none;">${fullText}</p>
-        <button id="toggleDescBtn" class="toggle-button">Show More</button>
-      `;
+                await operation(dbRef, productData);
+                showToast(`Product ${productId ? 'updated' : 'added'} successfully!`);
+                hideProductForm();
 
-      const btn = document.getElementById("toggleDescBtn");
-      btn.addEventListener("click", () => {
-        const shortPara = document.getElementById("shortDesc");
-        const fullPara = document.getElementById("fullDesc");
+            } catch (error) {
+                console.error("Error saving product: ", error);
+                showToast(`Error: ${error.message}`, true);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.querySelector('.fa-spinner').classList.add('hidden');
+                saveBtn.querySelector('.btn-text').classList.remove('hidden');
+            }
+        };
 
-        const isHidden = fullPara.style.display === "none";
-        shortPara.style.display = isHidden ? "none" : "block";
-        fullPara.style.display = isHidden ? "block" : "none";
-        btn.innerText = isHidden ? "Show Less" : "Show More"; // Updated text
-      });
-    }
+        const loadAdminProducts = () => {
+            onValue(ref(db, 'products'), (snapshot) => {
+                const listDiv = document.getElementById('admin-product-list');
+                listDiv.innerHTML = '';
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const productId = childSnapshot.key;
+                        const product = childSnapshot.val();
+                        listDiv.innerHTML += `
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <img src="${product.defaultImage}" alt="${product.title}" class="w-full h-48 object-cover rounded-lg mb-4">
+                                <h3 class="text-xl font-bold">${product.title}</h3>
+                                <p class="text-gray-600 mb-2">₹${product.price}</p>
+                                <p class="text-sm text-gray-500 mb-4 h-10 overflow-hidden">${product.description}</p>
+                                <div class="flex space-x-2">
+                                    <button data-id="${productId}" class="edit-product-btn flex-1 bg-yellow-400 text-white font-bold py-2 rounded-lg hover:bg-yellow-500">Edit</button>
+                                    <button data-id="${productId}" class="delete-product-btn flex-1 bg-red-500 text-white font-bold py-2 rounded-lg hover:bg-red-600">Delete</button>
+                                </div>
+                            </div>`;
+                    });
+                } else {
+                    listDiv.innerHTML = '<p class="col-span-full text-center text-gray-500">No products found.</p>';
+                }
+            });
+        };
 
-    // Handle Browser History (Back Button)
-    window.onpopstate = function (event) {
-        if (document.getElementById('productDetail').style.display === 'block' || document.getElementById('cartPage').style.display === 'block') {
-            backToShop();
-        } else if (document.getElementById('userPanel').style.display === 'block') {
-            // If on user panel, go back to login or exit (browser default behavior)
-            document.getElementById('userPanel').style.display = 'none';
-            document.getElementById('loginPanel').style.display = 'flex'; // Show login panel
-        } else {
-            // Default browser behavior for other states
-            history.back();
-        }
-    };
+        const deleteProduct = (productId) => {
+            if (confirm('Are you sure you want to delete this product?')) {
+                remove(ref(db, 'products/' + productId));
+            }
+        };
 
-    // Initial display on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        // This ensures login panel is shown initially
-        document.getElementById('loginPanel').style.display = 'flex'; // Use flex to center content
-    });
-  </script>
+        const editProduct = (productId) => {
+            get(ref(db, 'products/' + productId)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const product = snapshot.val();
+                    document.getElementById('product-id').value = productId;
+                    document.getElementById('product-title').value = product.title;
+                    document.getElementById('product-desc').value = product.description;
+                    document.getElementById('product-price').value = product.price;
+                    document.getElementById('product-buy-link').value = product.buyLink || '';
+                    
+                    const colorContainer = document.getElementById('color-inputs-container');
+                    colorContainer.innerHTML = '<h4 class="font-semibold">Product Colors & Images</h4>';
+                    Object.entries(product.colors).forEach(([color, url]) => {
+                         const div = document.createElement('div');
+                         div.className = 'grid grid-cols-1 md:grid-cols-3 gap-2 items-center p-2 border-t';
+                         div.innerHTML = `
+                            <input type="text" value="${color}" class="color-name-input p-2 border rounded-lg text-sm" required>
+                            <input type="file" class="image-file-input text-sm">
+                            <div class="flex items-center">
+                                <input type="url" value="${url}" class="image-url-input flex-1 p-2 border rounded-lg text-sm">
+                                <button type="button" class="remove-color-btn bg-red-100 text-red-600 px-2 py-1 rounded-md text-xs font-bold ml-2">X</button>
+                            </div>
+                         `;
+                         colorContainer.appendChild(div);
+                    });
+                    document.getElementById('form-title').innerText = 'Edit Product';
+                    document.getElementById('product-form-container').style.display = 'block';
+                    window.scrollTo(0, 0);
+                }
+            });
+        };
+
+        const loadUserProducts = () => {
+            onValue(ref(db, 'products'), (snapshot) => {
+                const listDiv = document.getElementById('user-product-list');
+                listDiv.innerHTML = '';
+                if (snapshot.exists()) {
+                    allProducts = snapshot.val();
+                    Object.entries(allProducts).forEach(([productId, product]) => {
+                        const colorSwatchesHTML = Object.entries(product.colors).map(([color, url]) => 
+                            `<span class="color-swatch" style="background-color: ${color.toLowerCase()};" title="${color}" data-product-id="${productId}" data-image-url="${url}"></span>`
+                        ).join('');
+
+                        const buyButtonHTML = product.buyLink 
+                            ? `<a href="${product.buyLink}" target="_blank" class="flex-1"><button class="w-full bg-green-500 text-white font-bold py-2 rounded-lg hover:bg-green-600 transition">Buy Now</button></a>`
+                            : '';
+
+                        listDiv.innerHTML += `
+                            <div class="bg-white rounded-xl shadow-md overflow-hidden product-card">
+                                <img id="img-${productId}" src="${product.defaultImage}" alt="${product.title}" class="w-full h-64 object-cover">
+                                <div class="p-4">
+                                    <h3 class="text-lg font-bold truncate">${product.title}</h3>
+                                    <p class="text-xl font-semibold text-blue-600 my-2">₹${product.price}</p>
+                                    <div class="flex items-center space-x-2 mb-4" id="swatches-${productId}">${colorSwatchesHTML}</div>
+                                    <div class="flex space-x-2">
+                                        ${buyButtonHTML}
+                                        <button data-product-id="${productId}" class="add-to-cart-btn flex-1 bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700 transition">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </div>`;
+                    });
+                } else {
+                    listDiv.innerHTML = '<p class="col-span-full text-center text-gray-500">No products available.</p>';
+                }
+            });
+        };
+        
+        const changeProductImage = (swatchElement, productId, imageUrl) => {
+            document.getElementById(`img-${productId}`).src = imageUrl;
+            const swatches = document.querySelectorAll(`#swatches-${productId} .color-swatch`);
+            swatches.forEach(swatch => swatch.classList.remove('selected'));
+            swatchElement.classList.add('selected');
+        };
+        
+        const addToCart = (productId) => {
+            const product = allProducts[productId];
+            const selectedColorEl = document.querySelector(`#swatches-${productId} .color-swatch.selected`);
+            const selectedColor = selectedColorEl ? selectedColorEl.title : Object.keys(product.colors)[0];
+            const cartItemId = `${productId}_${selectedColor}`;
+            const existingItem = cart.find(item => item.cartId === cartItemId);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ cartId: cartItemId, id: productId, title: product.title, price: product.price, image: product.colors[selectedColor], color: selectedColor, quantity: 1 });
+            }
+            showToast(`${product.title} added to cart!`);
+            renderCart();
+        };
+
+        const renderCart = () => {
+            const itemsDiv = document.getElementById('cart-items');
+            itemsDiv.innerHTML = '';
+            if (cart.length === 0) {
+                document.getElementById('cart-footer').style.display = 'none';
+                document.getElementById('empty-cart-message').style.display = 'block';
+            } else {
+                document.getElementById('cart-footer').style.display = 'block';
+                document.getElementById('empty-cart-message').style.display = 'none';
+                cart.forEach(item => {
+                    itemsDiv.innerHTML += `
+                        <div class="flex items-center justify-between py-3 border-b">
+                            <img src="${item.image}" alt="${item.title}" class="w-16 h-16 object-cover rounded-md">
+                            <div class="flex-grow px-4">
+                                <p class="font-bold">${item.title}</p>
+                                <p class="text-sm text-gray-500">Color: ${item.color}</p>
+                                <p class="text-sm font-semibold">₹${item.price}</p>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <button data-cart-id="${item.cartId}" data-change="-1" class="update-quantity-btn w-7 h-7 bg-gray-200 rounded-full font-bold">-</button>
+                                <span>${item.quantity}</span>
+                                <button data-cart-id="${item.cartId}" data-change="1" class="update-quantity-btn w-7 h-7 bg-gray-200 rounded-full font-bold">+</button>
+                            </div>
+                            <button data-cart-id="${item.cartId}" class="remove-from-cart-btn ml-4 text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
+                        </div>`;
+                });
+            }
+            updateCartCountAndTotal();
+        };
+
+        const updateCartQuantity = (cartId, change) => {
+            const item = cart.find(i => i.cartId === cartId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(cartId);
+                } else {
+                    renderCart();
+                }
+            }
+        };
+
+        const removeFromCart = (cartId) => {
+            cart = cart.filter(item => item.cartId !== cartId);
+            renderCart();
+        };
+
+        const updateCartCountAndTotal = () => {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            document.getElementById('cart-count').innerText = totalItems;
+            document.getElementById('cart-total').innerText = `₹${totalPrice.toFixed(2)}`;
+        };
+
+        const showCart = () => {
+            renderCart();
+            document.getElementById('cart-modal').style.display = 'flex';
+        };
+        const hideCart = () => document.getElementById('cart-modal').style.display = 'none';
+
+        const handleAuthStateChange = (user) => {
+            const authContainer = document.getElementById('user-auth-container');
+            if (user) {
+                const photoURL = user.photoURL || `https://ui-avatars.com/api/?name=${user.email.split('@')[0]}&background=random`;
+                authContainer.innerHTML = `
+                    <button id="profile-button">
+                        <img src="${photoURL}" alt="Profile" class="w-10 h-10 rounded-full cursor-pointer border-2 border-transparent hover:border-blue-500">
+                    </button>
+                    <div id="profile-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-20 hidden dark:bg-gray-700">
+                        <div class="p-2 border-b">
+                            <p class="font-semibold text-sm text-gray-800 dark:text-gray-200">${user.displayName || user.email}</p>
+                        </div>
+                        <div class="p-2">
+                            <label class="flex items-center justify-between cursor-pointer">
+                                <span class="text-sm text-gray-700 dark:text-gray-200">Dark Mode</span>
+                                <div class="relative">
+                                    <input type="checkbox" id="dark-mode-toggle" class="sr-only">
+                                    <div class="block bg-gray-200 dark:bg-gray-600 w-10 h-6 rounded-full"></div>
+                                    <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full"></div>
+                                </div>
+                            </label>
+                        </div>
+                        <a href="#" id="user-logout-btn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600">Logout</a>
+                    </div>
+                `;
+                
+                document.getElementById('profile-button').addEventListener('click', () => {
+                    document.getElementById('profile-dropdown').classList.toggle('hidden');
+                });
+                document.getElementById('user-logout-btn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    signOut(auth);
+                });
+                
+                const darkModeToggle = document.getElementById('dark-mode-toggle');
+                darkModeToggle.checked = localStorage.getItem('theme') === 'dark';
+                darkModeToggle.addEventListener('change', toggleDarkMode);
+                
+                closeUserAuthModal();
+                if (currentView === 'role-selection-view') {
+                    showView('user-view');
+                }
+            } else {
+                authContainer.innerHTML = `<button id="show-login-modal-btn" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700">Login / Sign Up</button>`;
+                document.getElementById('show-login-modal-btn')?.addEventListener('click', openUserAuthModal);
+                if (currentView === 'user-view') {
+                    showView('role-selection-view');
+                }
+            }
+        };
+
+        const handleGoogleLogin = () => signInWithPopup(auth, googleProvider).catch(err => showToast(err.message, true));
+        const handleEmailLogin = () => signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value).catch(err => showToast(err.message, true));
+        const handleEmailSignup = () => createUserWithEmailAndPassword(auth, document.getElementById('signup-email').value, document.getElementById('signup-password').value).catch(err => showToast(err.message, true));
+
+        const openUserAuthModal = () => document.getElementById('user-auth-modal').style.display = 'flex';
+        const closeUserAuthModal = () => document.getElementById('user-auth-modal').style.display = 'none';
+        
+        const toggleAuthViews = () => {
+            const loginView = document.getElementById('email-login-view');
+            const signupView = document.getElementById('email-signup-view');
+            loginView.style.display = loginView.style.display === 'none' ? 'block' : 'none';
+            signupView.style.display = signupView.style.display === 'none' ? 'block' : 'none';
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTheme();
+
+            document.getElementById('initial-google-login-btn').addEventListener('click', handleGoogleLogin);
+            document.getElementById('login-with-email-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                openUserAuthModal();
+            });
+            
+            document.getElementById('toggle-admin-login-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('admin-login-dropdown').classList.toggle('show');
+            });
+            
+            document.getElementById('admin-login-btn').addEventListener('click', handleAdminLogin);
+            document.getElementById('show-add-product-form-btn').addEventListener('click', showAddProductForm);
+            document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
+            document.getElementById('add-color-btn').addEventListener('click', addColorInput);
+            document.getElementById('cancel-product-form-btn').addEventListener('click', hideProductForm);
+            document.getElementById('header-title').addEventListener('click', () => {
+                if (!auth.currentUser) {
+                    showView('role-selection-view');
+                } else {
+                    signOut(auth);
+                }
+            });
+            document.getElementById('show-cart-btn').addEventListener('click', showCart);
+            document.getElementById('close-auth-modal-btn').addEventListener('click', closeUserAuthModal);
+            document.getElementById('goto-signup-link').addEventListener('click', toggleAuthViews);
+            document.getElementById('goto-login-link').addEventListener('click', toggleAuthViews);
+            document.getElementById('email-login-btn').addEventListener('click', handleEmailLogin);
+            document.getElementById('email-signup-btn').addEventListener('click', handleEmailSignup);
+            document.getElementById('google-login-btn').addEventListener('click', handleGoogleLogin);
+            document.getElementById('apple-login-btn').addEventListener('click', () => showToast('Apple login is not configured.', true));
+            document.getElementById('hide-cart-btn').addEventListener('click', hideCart);
+            document.getElementById('product-form').addEventListener('submit', handleProductFormSubmit);
+            
+            document.body.addEventListener('click', (e) => {
+                if (e.target.closest('.remove-color-btn')) {
+                    e.target.closest('.remove-color-btn').parentElement.parentElement.remove();
+                }
+                if (e.target.closest('.edit-product-btn')) {
+                    editProduct(e.target.closest('.edit-product-btn').dataset.id);
+                }
+                if (e.target.closest('.delete-product-btn')) {
+                    deleteProduct(e.target.closest('.delete-product-btn').dataset.id);
+                }
+                if (e.target.closest('.add-to-cart-btn')) {
+                    addToCart(e.target.closest('.add-to-cart-btn').dataset.productId);
+                }
+                if (e.target.closest('.color-swatch')) {
+                    const swatch = e.target.closest('.color-swatch');
+                    changeProductImage(swatch, swatch.dataset.productId, swatch.dataset.imageUrl);
+                }
+                if (e.target.closest('.update-quantity-btn')) {
+                    const btn = e.target.closest('.update-quantity-btn');
+                    updateCartQuantity(btn.dataset.cartId, parseInt(btn.dataset.change));
+                }
+                if (e.target.closest('.remove-from-cart-btn')) {
+                    removeFromCart(e.target.closest('.remove-from-cart-btn').dataset.cartId);
+                }
+                const profileDropdown = document.getElementById('profile-dropdown');
+                if (profileDropdown && !profileDropdown.classList.contains('hidden') && !e.target.closest('#user-auth-container')) {
+                    profileDropdown.classList.add('hidden');
+                }
+            });
+
+            onAuthStateChanged(auth, handleAuthStateChange);
+            loadUserProducts();
+        });
+    </script>
 </body>
 </html>
