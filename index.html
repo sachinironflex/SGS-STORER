@@ -12,8 +12,6 @@
             font-family: 'Inter', sans-serif; 
             transition: background-color 0.3s, color 0.3s;
         }
-        .view { display: none; }
-        .active-view { display: block; }
         .color-swatch {
             width: 24px;
             height: 24px;
@@ -44,7 +42,7 @@
             background-color: #22c55e;
             color: white;
             font-weight: 500;
-            z-index: 100;
+            z-index: 1000;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
@@ -75,18 +73,18 @@
         .dark .border-gray-300 { border-color: #4b5563; }
         .dark .border-b { border-color: #374151; }
         .dark input, .dark textarea { background-color: #374151; color: #f9fafb; border-color: #4b5563; }
-        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.2); }
+        .dark .shadow-lg, .dark .shadow-2xl { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.2); }
         .dark .product-card { border: 1px solid #374151; }
         .dark #profile-dropdown { background-color: #374151; }
         .dark .hover\:bg-gray-100:hover { background-color: #4b5563; }
         .dark ::-webkit-file-upload-button { background: #4b5563; color: #f9fafb; border: none; }
         .dot { transition: transform 0.3s ease; }
-        .dark .dot { transform: translateX(1rem); }
+        .dark #dark-mode-toggle + div .dot { transform: translateX(1rem); }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-    <div id="login-container" class="view active-view min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
+    <div id="login-container" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
         <div class="text-center bg-white p-10 rounded-xl shadow-2xl w-full max-w-md">
             <h1 class="text-4xl font-bold mb-2 text-gray-800">Welcome to the Store</h1>
             <p class="text-gray-500 mb-8">Login to start shopping or access the admin panel.</p>
@@ -109,8 +107,8 @@
         </div>
     </div>
 
-    <div id="app-container" class="view">
-        <div id="admin-dashboard-view" class="view">
+    <div id="app-container" class="hidden">
+        <div id="admin-dashboard-view" class="hidden">
             <div class="container mx-auto p-4 max-w-7xl">
                 <div class="flex justify-between items-center mb-6 pb-4 border-b">
                     <h2 class="text-4xl font-bold">Admin Dashboard</h2>
@@ -143,7 +141,7 @@
             </div>
         </div>
 
-        <div id="user-view" class="view">
+        <div id="user-view" class="hidden">
             <div class="container mx-auto p-4 max-w-7xl">
                 <div class="flex justify-between items-center mb-8 pb-4 border-b flex-wrap gap-4">
                     <div id="header-title" class="flex items-center space-x-2 cursor-pointer">
@@ -164,7 +162,7 @@
     </div>
 
 
-    <div id="user-auth-modal" class="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center" style="display: none;">
+    <div id="user-auth-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center" style="display: none;">
         <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md relative">
             <button id="close-auth-modal-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
             <div id="email-login-view">
@@ -222,7 +220,6 @@
         const storage = getStorage(app);
         const googleProvider = new GoogleAuthProvider();
 
-        let currentAppView = 'user-view';
         let cart = [];
         let allProducts = {};
 
@@ -251,10 +248,15 @@
             setTimeout(() => { toast.className = toast.className.replace('show', ''); }, 3000);
         };
 
-        const showAppView = (viewId) => {
-            document.getElementById(currentAppView)?.classList.remove('active-view');
-            document.getElementById(viewId)?.classList.add('active-view');
-            currentAppView = viewId;
+        const showScreen = (screenId) => {
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('app-container').style.display = 'none';
+            document.getElementById(screenId).style.display = 'block';
+        };
+        
+        const showAppScreen = (appScreenId) => {
+            document.querySelectorAll('#app-container > div').forEach(view => view.style.display = 'none');
+            document.getElementById(appScreenId).style.display = 'block';
         };
 
         const handleAdminLogin = () => {
@@ -262,9 +264,8 @@
             const passwordInput = document.getElementById('admin-password');
             
             if (usernameInput.value === 'Sachin' && passwordInput.value === '802165') {
-                document.getElementById('login-container').classList.remove('active-view');
-                document.getElementById('app-container').classList.add('active-view');
-                showAppView('admin-dashboard-view');
+                showScreen('app-container');
+                showAppScreen('admin-dashboard-view');
                 loadAdminProducts();
                 
                 usernameInput.value = '';
@@ -276,8 +277,7 @@
         };
         
         const logoutAdmin = () => {
-            document.getElementById('app-container').classList.remove('active-view');
-            document.getElementById('login-container').classList.add('active-view');
+            showScreen('login-container');
         };
 
         const showAddProductForm = () => {
@@ -565,9 +565,8 @@
         const handleAuthStateChange = (user) => {
             const authContainer = document.getElementById('user-auth-container');
             if (user) {
-                document.getElementById('login-container').classList.remove('active-view');
-                document.getElementById('app-container').classList.add('active-view');
-                showAppView('user-view');
+                showScreen('app-container');
+                showAppScreen('user-view');
                 loadUserProducts();
 
                 const photoURL = user.photoURL || `https://ui-avatars.com/api/?name=${user.email.split('@')[0]}&background=random`;
@@ -607,8 +606,7 @@
                 
                 closeUserAuthModal();
             } else {
-                document.getElementById('app-container').classList.remove('active-view');
-                document.getElementById('login-container').classList.add('active-view');
+                showScreen('login-container');
             }
         };
 
