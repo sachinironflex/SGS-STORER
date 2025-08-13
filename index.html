@@ -124,15 +124,15 @@
             <h2 class="text-2xl font-bold mb-8">Menu</h2>
             <nav class="flex flex-col space-y-2">
                 <a href="#shop" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Home</a>
-                <a href="#about" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">About</a>
-                <a href="#privacy-policy" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Privacy Policy</a>
-                <a href="#terms-condition" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Terms & Condition</a>
-                <a href="#refund-cancellation" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Refund & Cancellation</a>
-                <a href="#shipping" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Shipping</a>
-                <a href="#pricing" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Pricing</a>
-                <a href="#contact-us" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Contact Us</a>
-                <a href="#disclaimer" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Disclaimer</a>
-                <a href="#faq" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">FAQ</a>
+                <a href="#policy-about" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">About</a>
+                <a href="#policy-privacy-policy" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Privacy Policy</a>
+                <a href="#policy-terms-condition" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Terms & Condition</a>
+                <a href="#policy-refund-cancellation" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Refund & Cancellation</a>
+                <a href="#policy-shipping" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Shipping</a>
+                <a href="#policy-pricing" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Pricing</a>
+                <a href="#policy-contact-us" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Contact Us</a>
+                <a href="#policy-disclaimer" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Disclaimer</a>
+                <a href="#policy-faq" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">FAQ</a>
             </nav>
         </div>
 
@@ -141,31 +141,46 @@
                 <div class="flex justify-between items-center mb-6 pb-4 border-b">
                     <h2 class="text-4xl font-bold">Admin Dashboard</h2>
                     <div>
-                        <button id="show-add-product-form-btn" class="bg-green-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-600 transition duration-300"><i class="fas fa-plus mr-2"></i>Add Product</button>
+                        <button id="manage-pages-btn" class="bg-blue-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-600 transition duration-300"><i class="fas fa-file-alt mr-2"></i>Manage Pages</button>
+                        <button id="show-add-product-form-btn" class="bg-green-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-600 transition duration-300 ml-4"><i class="fas fa-plus mr-2"></i>Add Product</button>
                         <button id="admin-logout-btn" class="bg-red-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-600 transition duration-300 ml-4"><i class="fas fa-sign-out-alt mr-2"></i>Logout</button>
                     </div>
                 </div>
-                <div id="product-form-container" class="bg-white p-8 rounded-xl shadow-md mb-8" style="display: none;">
-                    <h3 id="form-title" class="text-2xl font-bold mb-6">Add New Product</h3>
-                    <form id="product-form" class="space-y-4">
-                        <input type="hidden" id="product-id">
-                        <input id="product-title" type="text" placeholder="Product Title" class="w-full p-3 border rounded-lg" required>
-                        <textarea id="product-desc" placeholder="Product Description" class="w-full p-3 border rounded-lg" rows="3" required></textarea>
-                        <input id="product-price" type="number" placeholder="Price (INR)" class="w-full p-3 border rounded-lg" required>
-                        <input id="product-buy-link" type="url" placeholder="Buy Now Link (e.g., Razorpay)" class="w-full p-3 border rounded-lg">
-                        
-                        <div id="color-inputs-container" class="space-y-3 p-4 border rounded-lg bg-gray-50"><h4 class="font-semibold">Product Colors & Images</h4></div>
-                        <button type="button" id="add-color-btn" class="text-sm bg-blue-100 text-blue-700 font-semibold py-2 px-4 rounded-lg hover:bg-blue-200">+ Add Another Color</button>
-                        <div class="flex space-x-4 pt-4">
-                            <button type="submit" id="save-product-btn" class="flex-grow bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center">
-                                <span class="btn-text">Save Product</span>
-                                <i class="fas fa-spinner fa-spin ml-2 hidden"></i>
-                            </button>
-                            <button type="button" id="cancel-product-form-btn" class="flex-grow bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300">Cancel</button>
-                        </div>
-                    </form>
+                <div id="product-management-container">
+                    <div id="product-form-container" class="bg-white p-8 rounded-xl shadow-md mb-8" style="display: none;">
+                        <h3 id="form-title" class="text-2xl font-bold mb-6">Add New Product</h3>
+                        <form id="product-form" class="space-y-4">
+                            <input type="hidden" id="product-id">
+                            <input id="product-title" type="text" placeholder="Product Title" class="w-full p-3 border rounded-lg" required>
+                            <textarea id="product-desc" placeholder="Product Description" class="w-full p-3 border rounded-lg" rows="3" required></textarea>
+                            <input id="product-price" type="number" placeholder="Price (INR)" class="w-full p-3 border rounded-lg" required>
+                            <input id="product-buy-link" type="url" placeholder="Buy Now Link (e.g., Razorpay)" class="w-full p-3 border rounded-lg">
+                            
+                            <div id="color-inputs-container" class="space-y-3 p-4 border rounded-lg bg-gray-50"><h4 class="font-semibold">Product Colors & Images</h4></div>
+                            <button type="button" id="add-color-btn" class="text-sm bg-blue-100 text-blue-700 font-semibold py-2 px-4 rounded-lg hover:bg-blue-200">+ Add Another Color</button>
+                            <div class="flex space-x-4 pt-4">
+                                <button type="submit" id="save-product-btn" class="flex-grow bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center">
+                                    <span class="btn-text">Save Product</span>
+                                    <i class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                                </button>
+                                <button type="button" id="cancel-product-form-btn" class="flex-grow bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div id="admin-product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
                 </div>
-                <div id="admin-product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+                <div id="page-management-container" class="hidden">
+                     <button id="back-to-products-btn" class="mb-4 bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300"><i class="fas fa-arrow-left mr-2"></i>Back to Products</button>
+                     <div id="pages-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                     <div id="page-editor-container" class="hidden mt-6 bg-white p-6 rounded-lg shadow-md">
+                        <h3 id="page-editor-title" class="text-2xl font-bold mb-4"></h3>
+                        <textarea id="page-editor-content" class="w-full h-64 p-2 border rounded-lg"></textarea>
+                        <div class="mt-4 flex space-x-4">
+                            <button id="save-page-content-btn" class="bg-green-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-600">Save</button>
+                            <button id="cancel-page-edit-btn" class="bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300">Cancel</button>
+                        </div>
+                     </div>
+                </div>
             </div>
         </div>
 
@@ -195,7 +210,6 @@
             </main>
         </div>
 
-        <!-- Policy Pages -->
         <div id="policy-pages-container" class="hidden container mx-auto p-4 md:p-8">
             <!-- Content will be injected here -->
         </div>
@@ -262,6 +276,7 @@
 
         let cart = [];
         let allProducts = {};
+        let currentPageKeyToEdit = null;
 
         const applyTheme = () => {
             if (localStorage.getItem('theme') === 'dark') {
@@ -308,13 +323,12 @@
 
         const router = () => {
             const path = window.location.hash || '#login';
-            const policyPagesContainer = document.getElementById('policy-pages-container');
             
-            showScreen('app-container'); // Show the main app container for all logged-in views
+            showScreen('app-container'); 
             
             if (path.startsWith('#policy-')) {
                 showAppScreen('policy-pages-container');
-                renderPolicyPage(path.substring(8)); // e.g., 'about'
+                renderPolicyPage(path.substring(8));
             } else if (path === '#admin') {
                 showAppScreen('admin-dashboard-view');
                 loadAdminProducts();
@@ -325,7 +339,7 @@
                 } else {
                     navigate('#login');
                 }
-            } else { // #login or any other hash
+            } else { 
                 if(auth.currentUser) {
                     signOut(auth); 
                 } else {
@@ -703,15 +717,15 @@
                 title: 'About Us',
                 content: `<p class="mb-4">SGS STORE aapka premium quality T-shirts ke liye one-stop destination hai. Hum latest trends aur comfortable fabric ko ek saath laate hain taaki aap har din stylish dikhein aur feel karein.</p><p>Hamara mission simple hai: high-quality, fashionable T-shirts ko affordable price par provide karna.</p>`
             },
-            'privacy-policy': {
+            privacy_policy: {
                 title: 'Privacy Policy',
                 content: `<p class="mb-4">Aapki privacy hamare liye mahatvapurna hai. Yeh policy batati hai ki hum aapki personal information kaise collect, use, aur protect karte hain.</p><h3 class="text-xl font-semibold mt-6 mb-2">Information We Collect</h3><p>Hum aapse naam, email, shipping address, aur payment details jaisi jaankari collect karte hain jab aap order place karte hain.</p><h3 class="text-xl font-semibold mt-6 mb-2">How We Use Information</h3><p>Aapki information ka istemal order process karne, customer support provide karne, aur promotional offers bhejne ke liye kiya jaata hai.</p>`
             },
-            'terms-condition': {
+            terms_condition: {
                 title: 'Terms & Conditions',
                 content: `<p class="mb-4">SGS STORE website ka upyog karke, aap in terms and conditions se sahmat hain. Kripya inhe dhyan se padhein.</p><h3 class="text-xl font-semibold mt-6 mb-2">Usage of Site</h3><p>Aap is site ka upyog keval lawful purposes ke liye kar sakte hain. Kisi bhi anuchit gatividhi ki anumati nahi hai.</p><h3 class="text-xl font-semibold mt-6 mb-2">Product Information</h3><p>Hum koshish karte hain ki product ki jaankari aur images aapse accurate ho, lekin halki-fulki aniyamitata ho sakti hai.</p>`
             },
-            'refund-cancellation': {
+            refund_cancellation: {
                 title: 'Refund & Cancellation Policy',
                 content: `<p class="mb-4">Hum chahte hain ki aap apni kharidari se santusht hon.</p><h3 class="text-xl font-semibold mt-6 mb-2">Cancellation</h3><p>Aap apna order shipping se pehle kabhi bhi cancel kar sakte hain. Iske liye hamare customer support se sampark karein.</p><h3 class="text-xl font-semibold mt-6 mb-2">Refund</h3><p>Agar aapko galat ya damaged product milta hai, to aap 7 dinon ke andar refund ya exchange ke liye request kar sakte hain. Product unused hona chahiye.</p>`
             },
@@ -723,7 +737,7 @@
                 title: 'Pricing',
                 content: `<p class="mb-4">Sabhi products ke daam Indian Rupees (INR) mein diye gaye hain. Prices mein taxes shaamil ho sakte hain ya nahi, yeh product page par bataya jaayega.</p><p>Hum kisi bhi samay bina kisi poorv suchna ke daam badalne ka adhikar rakhte hain.</p>`
             },
-            'contact-us': {
+            contact_us: {
                 title: 'Contact Us',
                 content: `<p class="mb-4">Aapke koi bhi sawal ya sujhav ho, to humse sampark karne mein sankoch na karein.</p><ul class="list-disc list-inside space-y-2"><li><strong>Email:</strong> <a href="mailto:sachinbusiness@gmail.com" class="text-blue-500">sachinbusiness@gmail.com</a></li><li><strong>Mobile:</strong> +91 9117080169</li></ul>`
             },
@@ -737,23 +751,88 @@
             }
         };
 
-        const renderPolicyPage = (pageKey) => {
-            const pageData = policyContent[pageKey.replace('-', '_')];
+        const initializeDefaultPages = async () => {
+            const pagesRef = ref(db, 'pages');
+            const snapshot = await get(pagesRef);
+            if (!snapshot.exists()) {
+                console.log("Initializing default pages in Firebase...");
+                await set(pagesRef, policyContent);
+            }
+        };
+
+        const renderPolicyPage = async (pageKey) => {
             const container = document.getElementById('policy-pages-container');
-            if (pageData) {
-                container.innerHTML = `
-                    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
-                        <h2 class="text-3xl font-bold mb-6 border-b pb-4">${pageData.title}</h2>
-                        <div class="prose dark:prose-invert max-w-none">${pageData.content}</div>
-                    </div>
-                `;
-            } else {
-                container.innerHTML = `<p>Page not found.</p>`;
+            const pageRef = ref(db, `pages/${pageKey}`);
+            try {
+                const snapshot = await get(pageRef);
+                if (snapshot.exists()) {
+                    const pageData = snapshot.val();
+                    container.innerHTML = `
+                        <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
+                            <h2 class="text-3xl font-bold mb-6 border-b pb-4">${pageData.title}</h2>
+                            <div class="prose dark:prose-invert max-w-none">${pageData.content}</div>
+                        </div>
+                    `;
+                } else {
+                     container.innerHTML = `<p>Content not available.</p>`;
+                }
+            } catch (error) {
+                console.error("Error fetching page content:", error);
+                container.innerHTML = `<p>Error loading content.</p>`;
+            }
+        };
+
+        const loadAdminPagesList = async () => {
+            const listContainer = document.getElementById('pages-list');
+            listContainer.innerHTML = '';
+            const pagesRef = ref(db, 'pages');
+            const snapshot = await get(pagesRef);
+            if(snapshot.exists()) {
+                const pages = snapshot.val();
+                for (const key in pages) {
+                    const page = pages[key];
+                    const button = document.createElement('button');
+                    button.className = 'w-full text-left p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-50 dark:hover:bg-gray-600';
+                    button.textContent = page.title;
+                    button.dataset.pageKey = key;
+                    button.addEventListener('click', () => openPageEditor(key));
+                    listContainer.appendChild(button);
+                }
+            }
+        };
+
+        const openPageEditor = async (pageKey) => {
+            currentPageKeyToEdit = pageKey;
+            const pageRef = ref(db, `pages/${pageKey}`);
+            const snapshot = await get(pageRef);
+            if(snapshot.exists()) {
+                const pageData = snapshot.val();
+                document.getElementById('page-editor-title').textContent = `Editing: ${pageData.title}`;
+                document.getElementById('page-editor-content').value = pageData.content;
+                document.getElementById('pages-list').style.display = 'none';
+                document.getElementById('page-editor-container').style.display = 'block';
+            }
+        };
+
+        const savePageContent = async () => {
+            if (!currentPageKeyToEdit) return;
+            const newContent = document.getElementById('page-editor-content').value;
+            const pageContentRef = ref(db, `pages/${currentPageKeyToEdit}/content`);
+            try {
+                await set(pageContentRef, newContent);
+                showToast('Page content saved successfully!');
+                document.getElementById('page-editor-container').style.display = 'none';
+                document.getElementById('pages-list').style.display = 'grid';
+                currentPageKeyToEdit = null;
+            } catch (error) {
+                showToast('Error saving content.', true);
+                console.error(error);
             }
         };
 
         document.addEventListener('DOMContentLoaded', () => {
             applyTheme();
+            initializeDefaultPages();
             
             window.addEventListener('popstate', router);
             router(); 
@@ -770,7 +849,25 @@
             });
             
             document.getElementById('admin-login-btn').addEventListener('click', handleAdminLogin);
-            document.getElementById('show-add-product-form-btn').addEventListener('click', showAddProductForm);
+            document.getElementById('show-add-product-form-btn').addEventListener('click', () => {
+                document.getElementById('product-management-container').style.display = 'block';
+                document.getElementById('page-management-container').style.display = 'none';
+            });
+            document.getElementById('manage-pages-btn').addEventListener('click', () => {
+                document.getElementById('product-management-container').style.display = 'none';
+                document.getElementById('page-management-container').style.display = 'block';
+                loadAdminPagesList();
+            });
+            document.getElementById('back-to-products-btn').addEventListener('click', () => {
+                document.getElementById('product-management-container').style.display = 'block';
+                document.getElementById('page-management-container').style.display = 'none';
+            });
+            document.getElementById('save-page-content-btn').addEventListener('click', savePageContent);
+            document.getElementById('cancel-page-edit-btn').addEventListener('click', () => {
+                document.getElementById('page-editor-container').style.display = 'none';
+                document.getElementById('pages-list').style.display = 'grid';
+            });
+
             document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
             document.getElementById('add-color-btn').addEventListener('click', addColorInput);
             document.getElementById('cancel-product-form-btn').addEventListener('click', hideProductForm);
