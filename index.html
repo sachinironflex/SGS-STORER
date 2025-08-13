@@ -75,11 +75,20 @@
         .dark input, .dark textarea { background-color: #374151; color: #f9fafb; border-color: #4b5563; }
         .dark .shadow-lg, .dark .shadow-2xl { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.2); }
         .dark .product-card { border: 1px solid #374151; }
-        .dark #profile-dropdown { background-color: #374151; }
+        .dark #profile-dropdown, .dark #sidebar { background-color: #374151; }
         .dark .hover\:bg-gray-100:hover { background-color: #4b5563; }
         .dark ::-webkit-file-upload-button { background: #4b5563; color: #f9fafb; border: none; }
         .dot { transition: transform 0.3s ease; }
         .dark #dark-mode-toggle + div .dot { transform: translateX(1rem); }
+        
+        /* Sidebar Styles */
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(-100%);
+        }
+        #sidebar.open {
+            transform: translateX(0);
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -108,6 +117,25 @@
     </div>
 
     <div id="app-container" class="hidden">
+        <!-- Sidebar -->
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+        <div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg p-4 z-50">
+            <button id="close-sidebar-btn" class="absolute top-4 right-4 text-2xl">&times;</button>
+            <h2 class="text-2xl font-bold mb-8">Menu</h2>
+            <nav class="flex flex-col space-y-2">
+                <a href="#shop" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Home</a>
+                <a href="#about" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">About</a>
+                <a href="#privacy-policy" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Privacy Policy</a>
+                <a href="#terms-condition" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Terms & Condition</a>
+                <a href="#refund-cancellation" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Refund & Cancellation</a>
+                <a href="#shipping" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Shipping</a>
+                <a href="#pricing" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Pricing</a>
+                <a href="#contact-us" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Contact Us</a>
+                <a href="#disclaimer" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Disclaimer</a>
+                <a href="#faq" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">FAQ</a>
+            </nav>
+        </div>
+
         <div id="admin-dashboard-view" class="hidden">
             <div class="container mx-auto p-4 max-w-7xl">
                 <div class="flex justify-between items-center mb-6 pb-4 border-b">
@@ -145,7 +173,7 @@
             <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-40">
                 <div class="container mx-auto p-4 flex justify-between items-center">
                     <div class="w-1/3">
-                         <!-- Left side placeholder -->
+                         <button id="open-sidebar-btn" class="text-2xl"><i class="fas fa-bars"></i></button>
                     </div>
                     <div class="w-1/3 text-center">
                         <div class="flex items-center justify-center space-x-2 cursor-pointer" id="header-title">
@@ -165,6 +193,11 @@
             <main class="container mx-auto p-4">
                 <div id="user-product-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
             </main>
+        </div>
+
+        <!-- Policy Pages -->
+        <div id="policy-pages-container" class="hidden container mx-auto p-4 md:p-8">
+            <!-- Content will be injected here -->
         </div>
     </div>
 
@@ -267,7 +300,6 @@
         };
         
         const navigate = (path) => {
-            // Only push state if the path is different to avoid cluttering history
             if (window.location.hash !== path) {
                 history.pushState({path}, '', path);
             }
@@ -276,14 +308,18 @@
 
         const router = () => {
             const path = window.location.hash || '#login';
+            const policyPagesContainer = document.getElementById('policy-pages-container');
             
-            if (path === '#admin') {
-                showScreen('app-container');
+            showScreen('app-container'); // Show the main app container for all logged-in views
+            
+            if (path.startsWith('#policy-')) {
+                showAppScreen('policy-pages-container');
+                renderPolicyPage(path.substring(8)); // e.g., 'about'
+            } else if (path === '#admin') {
                 showAppScreen('admin-dashboard-view');
                 loadAdminProducts();
             } else if (path === '#shop') {
                 if (auth.currentUser) {
-                    showScreen('app-container');
                     showAppScreen('user-view');
                     loadUserProducts();
                 } else {
@@ -291,7 +327,7 @@
                 }
             } else { // #login or any other hash
                 if(auth.currentUser) {
-                    signOut(auth); // This will trigger onAuthStateChanged which will then navigate to #login
+                    signOut(auth); 
                 } else {
                     showScreen('login-container');
                 }
@@ -601,7 +637,11 @@
         const handleAuthStateChange = (user) => {
             const authContainer = document.getElementById('user-auth-container');
             if (user) {
-                navigate('#shop');
+                if (window.location.hash === '#login' || window.location.hash === '') {
+                    navigate('#shop');
+                } else {
+                    router();
+                }
                 const photoURL = user.photoURL || `https://ui-avatars.com/api/?name=${user.email.split('@')[0]}&background=random`;
                 authContainer.innerHTML = `
                     <button id="profile-button">
@@ -657,11 +697,66 @@
             signupView.style.display = signupView.style.display === 'none' ? 'block' : 'none';
         };
 
+        // Policy Pages Content
+        const policyContent = {
+            about: {
+                title: 'About Us',
+                content: `<p class="mb-4">SGS STORE aapka premium quality T-shirts ke liye one-stop destination hai. Hum latest trends aur comfortable fabric ko ek saath laate hain taaki aap har din stylish dikhein aur feel karein.</p><p>Hamara mission simple hai: high-quality, fashionable T-shirts ko affordable price par provide karna.</p>`
+            },
+            'privacy-policy': {
+                title: 'Privacy Policy',
+                content: `<p class="mb-4">Aapki privacy hamare liye mahatvapurna hai. Yeh policy batati hai ki hum aapki personal information kaise collect, use, aur protect karte hain.</p><h3 class="text-xl font-semibold mt-6 mb-2">Information We Collect</h3><p>Hum aapse naam, email, shipping address, aur payment details jaisi jaankari collect karte hain jab aap order place karte hain.</p><h3 class="text-xl font-semibold mt-6 mb-2">How We Use Information</h3><p>Aapki information ka istemal order process karne, customer support provide karne, aur promotional offers bhejne ke liye kiya jaata hai.</p>`
+            },
+            'terms-condition': {
+                title: 'Terms & Conditions',
+                content: `<p class="mb-4">SGS STORE website ka upyog karke, aap in terms and conditions se sahmat hain. Kripya inhe dhyan se padhein.</p><h3 class="text-xl font-semibold mt-6 mb-2">Usage of Site</h3><p>Aap is site ka upyog keval lawful purposes ke liye kar sakte hain. Kisi bhi anuchit gatividhi ki anumati nahi hai.</p><h3 class="text-xl font-semibold mt-6 mb-2">Product Information</h3><p>Hum koshish karte hain ki product ki jaankari aur images aapse accurate ho, lekin halki-fulki aniyamitata ho sakti hai.</p>`
+            },
+            'refund-cancellation': {
+                title: 'Refund & Cancellation Policy',
+                content: `<p class="mb-4">Hum chahte hain ki aap apni kharidari se santusht hon.</p><h3 class="text-xl font-semibold mt-6 mb-2">Cancellation</h3><p>Aap apna order shipping se pehle kabhi bhi cancel kar sakte hain. Iske liye hamare customer support se sampark karein.</p><h3 class="text-xl font-semibold mt-6 mb-2">Refund</h3><p>Agar aapko galat ya damaged product milta hai, to aap 7 dinon ke andar refund ya exchange ke liye request kar sakte hain. Product unused hona chahiye.</p>`
+            },
+            shipping: {
+                title: 'Shipping Policy',
+                content: `<p class="mb-4">Hum poore India mein apne products deliver karte hain.</p><h3 class="text-xl font-semibold mt-6 mb-2">Processing Time</h3><p>Orders aam taur par 1-2 business days mein process aur ship kiye jaate hain.</p><h3 class="text-xl font-semibold mt-6 mb-2">Delivery Time</h3><p>Delivery mein aapke location ke anusaar 5-7 business days lag sakte hain.</p>`
+            },
+            pricing: {
+                title: 'Pricing',
+                content: `<p class="mb-4">Sabhi products ke daam Indian Rupees (INR) mein diye gaye hain. Prices mein taxes shaamil ho sakte hain ya nahi, yeh product page par bataya jaayega.</p><p>Hum kisi bhi samay bina kisi poorv suchna ke daam badalne ka adhikar rakhte hain.</p>`
+            },
+            'contact-us': {
+                title: 'Contact Us',
+                content: `<p class="mb-4">Aapke koi bhi sawal ya sujhav ho, to humse sampark karne mein sankoch na karein.</p><ul class="list-disc list-inside space-y-2"><li><strong>Email:</strong> <a href="mailto:sachinbusiness@gmail.com" class="text-blue-500">sachinbusiness@gmail.com</a></li><li><strong>Mobile:</strong> +91 9117080169</li></ul>`
+            },
+            disclaimer: {
+                title: 'Disclaimer',
+                content: `<p class="mb-4">Is website par di gayi jaankari keval samanya suchna ke uddeshya se hai. SGS STORE is jaankari ki purnata ya satyata ke baare mein koi warranty nahi deta hai.</p><p>Website par dikhaye gaye product colors aapke screen resolution ke kaaran vastavik product se thode alag ho sakte hain.</p>`
+            },
+            faq: {
+                title: 'Frequently Asked Questions (FAQ)',
+                content: `<div class="space-y-4"><h3 class="text-xl font-semibold">Mera order kab tak deliver hoga?</h3><p>Aam taur par, delivery mein 5-7 business days lagte hain.</p><h3 class="text-xl font-semibold mt-4">Kya main apna order cancel kar sakta hoon?</h3><p>Haan, aap shipping se pehle apna order cancel kar sakte hain.</p><h3 class="text-xl font-semibold mt-4">Payment options kya hain?</h3><p>Hum sabhi major credit/debit cards, UPI, aur net banking accept karte hain.</p></div>`
+            }
+        };
+
+        const renderPolicyPage = (pageKey) => {
+            const pageData = policyContent[pageKey.replace('-', '_')];
+            const container = document.getElementById('policy-pages-container');
+            if (pageData) {
+                container.innerHTML = `
+                    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
+                        <h2 class="text-3xl font-bold mb-6 border-b pb-4">${pageData.title}</h2>
+                        <div class="prose dark:prose-invert max-w-none">${pageData.content}</div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `<p>Page not found.</p>`;
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             applyTheme();
             
             window.addEventListener('popstate', router);
-            router(); // Initial call to handle the route on page load
+            router(); 
 
             document.getElementById('initial-google-login-btn').addEventListener('click', handleGoogleLogin);
             document.getElementById('login-with-email-link').addEventListener('click', (e) => {
@@ -679,11 +774,7 @@
             document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
             document.getElementById('add-color-btn').addEventListener('click', addColorInput);
             document.getElementById('cancel-product-form-btn').addEventListener('click', hideProductForm);
-            document.getElementById('header-title').addEventListener('click', () => {
-                if (auth.currentUser) {
-                    signOut(auth);
-                }
-            });
+            document.getElementById('header-title').addEventListener('click', () => navigate('#shop'));
             document.getElementById('show-cart-btn').addEventListener('click', showCart);
             document.getElementById('close-auth-modal-btn').addEventListener('click', closeUserAuthModal);
             document.getElementById('goto-signup-link').addEventListener('click', toggleAuthViews);
@@ -694,6 +785,29 @@
             document.getElementById('apple-login-btn').addEventListener('click', () => showToast('Apple login is not configured.', true));
             document.getElementById('hide-cart-btn').addEventListener('click', hideCart);
             document.getElementById('product-form').addEventListener('submit', handleProductFormSubmit);
+            
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const openSidebarBtn = document.getElementById('open-sidebar-btn');
+            const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+
+            const toggleSidebar = () => {
+                sidebar.classList.toggle('open');
+                sidebarOverlay.classList.toggle('hidden');
+            };
+
+            openSidebarBtn.addEventListener('click', toggleSidebar);
+            closeSidebarBtn.addEventListener('click', toggleSidebar);
+            sidebarOverlay.addEventListener('click', toggleSidebar);
+
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const path = e.target.getAttribute('href');
+                    navigate(path);
+                    toggleSidebar();
+                });
+            });
             
             document.body.addEventListener('click', (e) => {
                 if (e.target.closest('.remove-color-btn')) {
