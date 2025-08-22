@@ -1,943 +1,165 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGS STORE</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { 
-            font-family: 'Inter', sans-serif; 
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .color-swatch {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid #fff;
-            box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-        }
-        .color-swatch:hover, .color-swatch.selected {
-            transform: scale(1.2);
-            border-color: #3b82f6; /* blue-500 */
-        }
-        .product-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        #toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 24px;
-            border-radius: 8px;
-            background-color: #22c55e;
-            color: white;
-            font-weight: 500;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
-        }
-        #toast.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, -20px);
-        }
-        #admin-login-dropdown {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
-            padding: 0;
-        }
-        #admin-login-dropdown.show {
-            max-height: 300px;
-            padding: 1rem;
-        }
-        /* Dark Mode Styles */
-        .dark, .dark body { background-color: #111827; color: #f3f4f6; }
-        .dark .bg-white { background-color: #1f2937; }
-        .dark .bg-gray-50 { background-color: #374151; }
-        .dark .bg-gray-100 { background-color: #111827; }
-        .dark .text-gray-800 { color: #f9fafb; }
-        .dark .text-gray-600 { color: #d1d5db; }
-        .dark .text-gray-500 { color: #9ca3af; }
-        .dark .border-gray-300 { border-color: #4b5563; }
-        .dark .border-b { border-color: #374151; }
-        .dark input, .dark textarea { background-color: #374151; color: #f9fafb; border-color: #4b5563; }
-        .dark .shadow-lg, .dark .shadow-2xl { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.2); }
-        .dark .product-card { border: 1px solid #374151; }
-        .dark #profile-dropdown, .dark #sidebar { background-color: #374151; }
-        .dark .hover\:bg-gray-100:hover { background-color: #4b5563; }
-        .dark ::-webkit-file-upload-button { background: #4b5563; color: #f9fafb; border: none; }
-        .dot { transition: transform 0.3s ease; }
-        .dark #dark-mode-toggle + div .dot { transform: translateX(1rem); }
-        
-        /* Sidebar Styles */
-        #sidebar {
-            transition: transform 0.3s ease-in-out;
-            transform: translateX(-100%);
-        }
-        #sidebar.open {
-            transform: translateX(0);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Section</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 20px 0;
+      font-size: 28px;
+      text-shadow: 0 0 10px cyan;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .btn {
+      width: 220px;
+      height: 60px;
+      background: #111;
+      border: 2px solid cyan;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 8px;
+      text-transform: uppercase;
+      box-shadow: 0 0 15px cyan, 0 0 25px blue;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .btn:hover {
+      background: cyan;
+      color: black;
+      box-shadow: 0 0 25px cyan, 0 0 40px blue;
+    }
+
+    .content {
+      display: none;
+      margin-top: 25px;
+      padding: 20px;
+      background: #111;
+      border: 2px solid cyan;
+      border-radius: 10px;
+      box-shadow: 0 0 20px cyan;
+    }
+
+    .content a {
+      display: inline-block;
+      margin: 10px;
+      padding: 12px 22px;
+      text-decoration: none;
+      color: white;
+      background: #222;
+      border: 1px solid cyan;
+      border-radius: 6px;
+      transition: 0.3s;
+      box-shadow: 0 0 10px cyan;
+    }
+
+    .content a:hover {
+      background: cyan;
+      color: black;
+      box-shadow: 0 0 20px cyan, 0 0 30px blue;
+    }
+
+    .back-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 0 10px red;
+    }
+
+    .back-btn:hover {
+      background: darkred;
+      box-shadow: 0 0 20px red;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body>
 
-    <div id="login-container" class="hidden min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
-        <div class="text-center bg-white p-10 rounded-xl shadow-2xl w-full max-w-md">
-            <h1 class="text-4xl font-bold mb-2 text-gray-800">Welcome to SGS STORE</h1>
-            <p class="text-gray-500 mb-8">Login to start shopping or access the admin panel.</p>
-            <div class="flex flex-col gap-4 justify-center">
-                <button id="initial-google-login-btn" class="w-full bg-white border border-gray-300 text-gray-700 font-semibold py-3 px-8 rounded-lg hover:bg-gray-50 flex items-center justify-center transition duration-300">
-                    <img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5 mr-3"> Continue with Google
-                </button>
-                <p class="text-sm text-gray-500">Or <a href="#" id="login-with-email-link" class="text-blue-600 font-semibold hover:underline">login with Email/Password</a></p>
-            </div>
-            <div class="mt-8 border-t pt-6">
-                <a href="#" id="toggle-admin-login-btn" class="text-sm text-gray-600 hover:text-blue-600 hover:underline">Admin Login</a>
-                <div id="admin-login-dropdown" class="mt-2 bg-gray-50 rounded-lg text-left">
-                     <div class="space-y-3">
-                        <input id="admin-username" type="text" placeholder="Username" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <input id="admin-password" type="password" placeholder="Password" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <button id="admin-login-btn" class="w-full bg-gray-800 text-white font-bold py-2 rounded-lg hover:bg-gray-900 transition duration-300">Login</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  <h1>Study Material 2025</h1>
 
-    <div id="app-container" class="hidden">
-        <!-- Sidebar -->
-        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
-        <div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg p-4 z-50">
-            <button id="close-sidebar-btn" class="absolute top-4 right-4 text-2xl">&times;</button>
-            <h2 class="text-2xl font-bold mb-8">Menu</h2>
-            <nav class="flex flex-col space-y-2">
-                <a href="#shop" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Home</a>
-                <a href="#policy-about" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">About</a>
-                <a href="#policy-privacy-policy" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Privacy Policy</a>
-                <a href="#policy-terms-condition" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Terms & Condition</a>
-                <a href="#policy-refund-cancellation" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Refund & Cancellation</a>
-                <a href="#policy-shipping" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Shipping</a>
-                <a href="#policy-pricing" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Pricing</a>
-                <a href="#policy-contact-us" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Contact Us</a>
-                <a href="#policy-disclaimer" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">Disclaimer</a>
-                <a href="#policy-faq" class="sidebar-link text-lg p-2 rounded hover:bg-gray-100">FAQ</a>
-            </nav>
-        </div>
+  <div id="menu" class="menu">
+    <button class="btn" onclick="openContent('current')">Current Affairs 2025</button>
+    <button class="btn" onclick="openContent('gkgs')">GK / GS All 2025</button>
+    <button class="btn" onclick="openContent('rpf')">RPF All PDF</button>
+    <button class="btn" onclick="openContent('rrb')">RRB NTPC Previous Year Maths</button>
+    <button class="btn" onclick="openContent('speedy')">Speedy GK</button>
+  </div>
 
-        <div id="admin-dashboard-view" class="hidden">
-            <div class="container mx-auto p-4 max-w-7xl">
-                <div class="flex justify-between items-center mb-6 pb-4 border-b">
-                    <h2 class="text-4xl font-bold">Admin Dashboard</h2>
-                    <div>
-                        <button id="manage-pages-btn" class="bg-blue-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-600 transition duration-300"><i class="fas fa-file-alt mr-2"></i>Manage Pages</button>
-                        <button id="show-add-product-form-btn" class="bg-green-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-600 transition duration-300 ml-4"><i class="fas fa-plus mr-2"></i>Add Product</button>
-                        <button id="admin-logout-btn" class="bg-red-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-600 transition duration-300 ml-4"><i class="fas fa-sign-out-alt mr-2"></i>Logout</button>
-                    </div>
-                </div>
-                <div id="product-management-container">
-                    <div id="product-form-container" class="bg-white p-8 rounded-xl shadow-md mb-8" style="display: none;">
-                        <h3 id="form-title" class="text-2xl font-bold mb-6">Add New Product</h3>
-                        <form id="product-form" class="space-y-4">
-                            <input type="hidden" id="product-id">
-                            <input id="product-title" type="text" placeholder="Product Title" class="w-full p-3 border rounded-lg" required>
-                            <textarea id="product-desc" placeholder="Product Description" class="w-full p-3 border rounded-lg" rows="3" required></textarea>
-                            <input id="product-price" type="number" placeholder="Price (INR)" class="w-full p-3 border rounded-lg" required>
-                            <input id="product-buy-link" type="url" placeholder="Buy Now Link (e.g., Razorpay)" class="w-full p-3 border rounded-lg">
-                            
-                            <div id="color-inputs-container" class="space-y-3 p-4 border rounded-lg bg-gray-50"><h4 class="font-semibold">Product Colors & Images</h4></div>
-                            <button type="button" id="add-color-btn" class="text-sm bg-blue-100 text-blue-700 font-semibold py-2 px-4 rounded-lg hover:bg-blue-200">+ Add Another Color</button>
-                            <div class="flex space-x-4 pt-4">
-                                <button type="submit" id="save-product-btn" class="flex-grow bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center">
-                                    <span class="btn-text">Save Product</span>
-                                    <i class="fas fa-spinner fa-spin ml-2 hidden"></i>
-                                </button>
-                                <button type="button" id="cancel-product-form-btn" class="flex-grow bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300">Cancel</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div id="admin-product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-                </div>
-                <div id="page-management-container" class="hidden">
-                     <button id="back-to-products-btn" class="mb-4 bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300"><i class="fas fa-arrow-left mr-2"></i>Back to Products</button>
-                     <div id="pages-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-                     <div id="page-editor-container" class="hidden mt-6 bg-white p-6 rounded-lg shadow-md">
-                        <h3 id="page-editor-title" class="text-2xl font-bold mb-4"></h3>
-                        <textarea id="page-editor-content" class="w-full h-64 p-2 border rounded-lg"></textarea>
-                        <div class="mt-4 flex space-x-4">
-                            <button id="save-page-content-btn" class="bg-green-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-600">Save</button>
-                            <button id="cancel-page-edit-btn" class="bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300">Cancel</button>
-                        </div>
-                     </div>
-                </div>
-            </div>
-        </div>
+  <!-- Current Affairs -->
+  <div id="current" class="content">
+    <h2>Current Affairs 2025</h2>
+    <a href="https://drive.google.com/file/d/1a_bvTeSY4U5IC6XP_Fa4r7lnp7gFMT72/view?usp=drivesdk" target="_blank">📖 View PDF</a>
+    <a href="https://drive.google.com/uc?export=download&id=1a_bvTeSY4U5IC6XP_Fa4r7lnp7gFMT72">⬇ Download PDF</a>
+    <br><button class="back-btn" onclick="goBack()">🔙 Back</button>
+  </div>
 
-        <div id="user-view" class="hidden">
-            <header class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md sticky top-0 z-40">
-                <div class="container mx-auto p-4 flex justify-between items-center">
-                    <div class="w-1/3">
-                         <button id="open-sidebar-btn" class="text-2xl"><i class="fas fa-bars"></i></button>
-                    </div>
-                    <div class="w-1/3 text-center">
-                        <div class="flex items-center justify-center space-x-2 cursor-pointer" id="header-title">
-                            <i class="fas fa-tshirt text-3xl"></i>
-                            <h1 class="text-3xl font-bold">SGS STORE</h1>
-                        </div>
-                    </div>
-                    <div class="w-1/3 flex justify-end items-center space-x-4">
-                        <div id="user-auth-container" class="relative"></div>
-                        <button id="show-cart-btn" class="relative bg-white/20 hover:bg-white/30 p-3 rounded-full transition">
-                            <i class="fas fa-shopping-cart text-xl"></i>
-                            <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
-                        </button>
-                    </div>
-                </div>
-            </header>
-            <main class="container mx-auto p-4">
-                <div id="user-product-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
-            </main>
-        </div>
+  <!-- GK GS -->
+  <div id="gkgs" class="content">
+    <h2>GK / GS All 2025</h2>
+    <a href="https://drive.google.com/file/d/1aceIr41WCCkSEoYlQCA7XE2ClhQ9fuf-/view?usp=drivesdk" target="_blank">📖 View PDF</a>
+    <a href="https://drive.google.com/uc?export=download&id=1aceIr41WCCkSEoYlQCA7XE2ClhQ9fuf-">⬇ Download PDF</a>
+    <br><button class="back-btn" onclick="goBack()">🔙 Back</button>
+  </div>
 
-        <div id="policy-pages-container" class="hidden container mx-auto p-4 md:p-8">
-            <!-- Content will be injected here -->
-        </div>
-    </div>
+  <!-- RPF Example -->
+  <div id="rpf" class="content">
+    <h2>RPF All PDF</h2>
+    <a href="#">📖 View PDF (Example)</a>
+    <a href="#">⬇ Download PDF (Example)</a>
+    <br><button class="back-btn" onclick="goBack()">🔙 Back</button>
+  </div>
 
+  <!-- RRB Example -->
+  <div id="rrb" class="content">
+    <h2>RRB NTPC Previous Year Maths</h2>
+    <a href="#">📖 View PDF (Example)</a>
+    <a href="#">⬇ Download PDF (Example)</a>
+    <br><button class="back-btn" onclick="goBack()">🔙 Back</button>
+  </div>
 
-    <div id="user-auth-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center" style="display: none;">
-        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md relative">
-            <button id="close-auth-modal-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
-            <div id="email-login-view">
-                <h3 class="text-2xl font-bold mb-4 text-center">Login</h3>
-                <input id="login-email" type="email" placeholder="Email" class="w-full p-3 mb-3 border rounded-lg">
-                <input id="login-password" type="password" placeholder="Password" class="w-full p-3 mb-4 border rounded-lg">
-                <button id="email-login-btn" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 mb-3">Login</button>
-                <p class="text-center text-sm">Don't have an account? <a href="#" id="goto-signup-link" class="text-blue-600 font-semibold">Sign Up</a></p>
-            </div>
-            <div id="email-signup-view" style="display:none;">
-                <h3 class="text-2xl font-bold mb-4 text-center">Sign Up</h3>
-                <input id="signup-email" type="email" placeholder="Email" class="w-full p-3 mb-3 border rounded-lg">
-                <input id="signup-password" type="password" placeholder="Password" class="w-full p-3 mb-4 border rounded-lg">
-                <button id="email-signup-btn" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 mb-3">Create Account</button>
-                <p class="text-center text-sm">Already have an account? <a href="#" id="goto-login-link" class="text-blue-600 font-semibold">Login</a></p>
-            </div>
-            <div class="flex items-center my-6"><hr class="flex-grow border-t border-gray-300"><span class="px-3 text-gray-500">OR</span><hr class="flex-grow border-t border-gray-300"></div>
-            <div class="space-y-3">
-                <button id="google-login-btn" class="w-full flex items-center justify-center bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-50"><img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5 mr-3"> Continue with Google</button>
-                <button id="apple-login-btn" class="w-full flex items-center justify-center bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-800"><i class="fab fa-apple mr-3 text-xl"></i> Continue with Apple</button>
-            </div>
-        </div>
-    </div>
+  <!-- Speedy GK Example -->
+  <div id="speedy" class="content">
+    <h2>Speedy GK</h2>
+    <a href="#">📖 View PDF (Example)</a>
+    <a href="#">⬇ Download PDF (Example)</a>
+    <br><button class="back-btn" onclick="goBack()">🔙 Back</button>
+  </div>
 
-    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center" style="display: none;">
-        <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-2xl">
-            <div class="flex justify-between items-center border-b pb-4 mb-4"><h2 class="text-2xl font-bold">Your Cart</h2><button id="hide-cart-btn" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button></div>
-            <div id="cart-items" class="max-h-96 overflow-y-auto mb-4"></div>
-            <div id="cart-footer" class="border-t pt-4" style="display: none;"><div class="flex justify-between items-center font-bold text-xl mb-4"><span>Total:</span><span id="cart-total">₹0.00</span></div><button class="w-full bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600 transition">Proceed to Checkout</button></div>
-            <div id="empty-cart-message" class="text-center py-12" style="display: none;"><i class="fas fa-shopping-cart text-5xl text-gray-300 mb-4"></i><p class="text-gray-500">Your cart is empty.</p></div>
-        </div>
-    </div>
-    
-    <div id="toast"></div>
+  <script>
+    function openContent(id) {
+      document.getElementById("menu").style.display = "none";
+      document.querySelectorAll(".content").forEach(c => c.style.display = "none");
+      document.getElementById(id).style.display = "block";
+    }
 
-    <script type="module">
-        const firebaseConfig = {
-            apiKey: "AIzaSyAKp7o0HzRioOELQZwRU7WKkdmWFLtwyuY",
-            authDomain: "sachin-bda88.firebaseapp.com",
-            databaseURL: "https://sachin-bda88-default-rtdb.firebaseio.com",
-            projectId: "sachin-bda88",
-            storageBucket: "sachin-bda88.firebasestorage.app",
-            messagingSenderId: "371431713702",
-            appId: "1:371431713702:web:8ccbc31a741dae58433d67"
-        };
+    function goBack() {
+      document.querySelectorAll(".content").forEach(c => c.style.display = "none");
+      document.getElementById("menu").style.display = "flex";
+    }
+  </script>
 
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getDatabase, ref, set, get, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-storage.js";
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const auth = getAuth(app);
-        const storage = getStorage(app);
-        const googleProvider = new GoogleAuthProvider();
-
-        let cart = [];
-        let allProducts = {};
-        let currentPageKeyToEdit = null;
-
-        const applyTheme = () => {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        };
-
-        const toggleDarkMode = () => {
-            if (localStorage.getItem('theme') === 'dark') {
-                localStorage.setItem('theme', 'light');
-            } else {
-                localStorage.setItem('theme', 'dark');
-            }
-            applyTheme();
-        };
-
-        const showToast = (message, isError = false) => {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = 'show';
-            toast.style.backgroundColor = isError ? '#ef4444' : '#22c55e';
-            setTimeout(() => { toast.className = toast.className.replace('show', ''); }, 3000);
-        };
-
-        const showScreen = (screenId) => {
-            document.getElementById('login-container').style.display = 'none';
-            document.getElementById('app-container').style.display = 'none';
-            document.getElementById(screenId).style.display = 'block';
-        };
-        
-        const showAppScreen = (appScreenId) => {
-            document.querySelectorAll('#app-container > div').forEach(view => view.style.display = 'none');
-            document.getElementById(appScreenId).style.display = 'block';
-        };
-        
-        const navigate = (path) => {
-            if (window.location.hash !== path) {
-                history.pushState({path}, '', path);
-            }
-            router();
-        }
-
-        const router = () => {
-            const path = window.location.hash || '#login';
-            
-            showScreen('app-container'); 
-            
-            if (path.startsWith('#policy-')) {
-                showAppScreen('policy-pages-container');
-                renderPolicyPage(path.substring(8));
-            } else if (path === '#admin') {
-                showAppScreen('admin-dashboard-view');
-                loadAdminProducts();
-            } else if (path === '#shop') {
-                if (auth.currentUser) {
-                    showAppScreen('user-view');
-                    loadUserProducts();
-                } else {
-                    navigate('#login');
-                }
-            } else { 
-                if(auth.currentUser) {
-                    signOut(auth); 
-                } else {
-                    showScreen('login-container');
-                }
-            }
-        };
-
-        const handleAdminLogin = () => {
-            const usernameInput = document.getElementById('admin-username');
-            const passwordInput = document.getElementById('admin-password');
-            
-            if (usernameInput.value === 'Sachin' && passwordInput.value === '802165') {
-                usernameInput.value = '';
-                passwordInput.value = '';
-                document.getElementById('admin-login-dropdown').classList.remove('show');
-                navigate('#admin');
-            } else {
-                showToast('Invalid admin credentials!', true);
-            }
-        };
-        
-        const logoutAdmin = () => {
-            navigate('#login');
-        };
-
-        const showAddProductForm = () => {
-            document.getElementById('product-form').reset();
-            document.getElementById('product-id').value = '';
-            document.getElementById('form-title').innerText = 'Add New Product';
-            document.getElementById('color-inputs-container').innerHTML = '<h4 class="font-semibold">Product Colors & Images</h4>';
-            addColorInput();
-            document.getElementById('product-form-container').style.display = 'block';
-        };
-
-        const hideProductForm = () => document.getElementById('product-form-container').style.display = 'none';
-
-        const addColorInput = () => {
-            const container = document.getElementById('color-inputs-container');
-            const colorInputDiv = document.createElement('div');
-            colorInputDiv.className = 'grid grid-cols-1 md:grid-cols-3 gap-2 items-center p-2 border-t';
-            colorInputDiv.innerHTML = `
-                <input type="text" placeholder="Color Name (e.g., Black)" class="color-name-input p-2 border rounded-lg text-sm" required>
-                <input type="file" class="image-file-input text-sm">
-                <div class="flex items-center">
-                    <input type="url" placeholder="Or Image URL" class="image-url-input flex-1 p-2 border rounded-lg text-sm">
-                    <button type="button" class="remove-color-btn bg-red-100 text-red-600 px-2 py-1 rounded-md text-xs font-bold ml-2">X</button>
-                </div>
-            `;
-            container.appendChild(colorInputDiv);
-        };
-
-        const handleProductFormSubmit = async (e) => {
-            e.preventDefault();
-            const saveBtn = document.getElementById('save-product-btn');
-            saveBtn.disabled = true;
-            saveBtn.querySelector('.fa-spinner').classList.remove('hidden');
-            saveBtn.querySelector('.btn-text').classList.add('hidden');
-
-            try {
-                const productId = document.getElementById('product-id').value;
-                const title = document.getElementById('product-title').value;
-                const description = document.getElementById('product-desc').value;
-                const price = parseFloat(document.getElementById('product-price').value);
-                const buyLink = document.getElementById('product-buy-link').value;
-
-                const colorInputs = document.querySelectorAll('#color-inputs-container > div.grid');
-                
-                const uploadPromises = Array.from(colorInputs).map(async (div) => {
-                    const colorNameInput = div.querySelector('.color-name-input');
-                    const fileInput = div.querySelector('.image-file-input');
-                    const urlInput = div.querySelector('.image-url-input');
-                    
-                    const colorName = colorNameInput.value.trim();
-                    if (!colorName) return null;
-
-                    let imageUrl = urlInput.value.trim();
-                    const file = fileInput.files[0];
-
-                    if (file) {
-                        const filePath = `products/${Date.now()}-${file.name}`;
-                        const fileRef = storageRef(storage, filePath);
-                        await uploadBytes(fileRef, file);
-                        imageUrl = await getDownloadURL(fileRef);
-                    }
-
-                    if (!imageUrl) return null;
-                    return { colorName, imageUrl };
-                });
-
-                const resolvedColors = (await Promise.all(uploadPromises)).filter(c => c !== null);
-
-                if (resolvedColors.length === 0) {
-                    throw new Error('Please add at least one valid color with an image (file or URL).');
-                }
-
-                const colors = resolvedColors.reduce((acc, { colorName, imageUrl }) => {
-                    acc[colorName] = imageUrl;
-                    return acc;
-                }, {});
-
-                const productData = { 
-                    title, 
-                    description, 
-                    price, 
-                    buyLink,
-                    colors, 
-                    defaultImage: resolvedColors[0].imageUrl 
-                };
-
-                const dbRef = productId ? ref(db, 'products/' + productId) : push(ref(db, 'products'));
-                const operation = productId ? update : set;
-
-                await operation(dbRef, productData);
-                showToast(`Product ${productId ? 'updated' : 'added'} successfully!`);
-                hideProductForm();
-
-            } catch (error) {
-                console.error("Error saving product: ", error);
-                showToast(`Error: ${error.message}`, true);
-            } finally {
-                saveBtn.disabled = false;
-                saveBtn.querySelector('.fa-spinner').classList.add('hidden');
-                saveBtn.querySelector('.btn-text').classList.remove('hidden');
-            }
-        };
-
-        const loadAdminProducts = () => {
-            onValue(ref(db, 'products'), (snapshot) => {
-                const listDiv = document.getElementById('admin-product-list');
-                listDiv.innerHTML = '';
-                if (snapshot.exists()) {
-                    snapshot.forEach((childSnapshot) => {
-                        const productId = childSnapshot.key;
-                        const product = childSnapshot.val();
-                        listDiv.innerHTML += `
-                            <div class="bg-white p-6 rounded-xl shadow-md">
-                                <img src="${product.defaultImage}" alt="${product.title}" class="w-full h-48 object-cover rounded-lg mb-4">
-                                <h3 class="text-xl font-bold">${product.title}</h3>
-                                <p class="text-gray-600 mb-2">₹${product.price}</p>
-                                <p class="text-sm text-gray-500 mb-4 h-10 overflow-hidden">${product.description}</p>
-                                <div class="flex space-x-2">
-                                    <button data-id="${productId}" class="edit-product-btn flex-1 bg-yellow-400 text-white font-bold py-2 rounded-lg hover:bg-yellow-500">Edit</button>
-                                    <button data-id="${productId}" class="delete-product-btn flex-1 bg-red-500 text-white font-bold py-2 rounded-lg hover:bg-red-600">Delete</button>
-                                </div>
-                            </div>`;
-                    });
-                } else {
-                    listDiv.innerHTML = '<p class="col-span-full text-center text-gray-500">No products found.</p>';
-                }
-            });
-        };
-
-        const deleteProduct = (productId) => {
-            if (confirm('Are you sure you want to delete this product?')) {
-                remove(ref(db, 'products/' + productId));
-            }
-        };
-
-        const editProduct = (productId) => {
-            get(ref(db, 'products/' + productId)).then((snapshot) => {
-                if (snapshot.exists()) {
-                    const product = snapshot.val();
-                    document.getElementById('product-id').value = productId;
-                    document.getElementById('product-title').value = product.title;
-                    document.getElementById('product-desc').value = product.description;
-                    document.getElementById('product-price').value = product.price;
-                    document.getElementById('product-buy-link').value = product.buyLink || '';
-                    
-                    const colorContainer = document.getElementById('color-inputs-container');
-                    colorContainer.innerHTML = '<h4 class="font-semibold">Product Colors & Images</h4>';
-                    Object.entries(product.colors).forEach(([color, url]) => {
-                         const div = document.createElement('div');
-                         div.className = 'grid grid-cols-1 md:grid-cols-3 gap-2 items-center p-2 border-t';
-                         div.innerHTML = `
-                            <input type="text" value="${color}" class="color-name-input p-2 border rounded-lg text-sm" required>
-                            <input type="file" class="image-file-input text-sm">
-                            <div class="flex items-center">
-                                <input type="url" value="${url}" class="image-url-input flex-1 p-2 border rounded-lg text-sm">
-                                <button type="button" class="remove-color-btn bg-red-100 text-red-600 px-2 py-1 rounded-md text-xs font-bold ml-2">X</button>
-                            </div>
-                         `;
-                         colorContainer.appendChild(div);
-                    });
-                    document.getElementById('form-title').innerText = 'Edit Product';
-                    document.getElementById('product-form-container').style.display = 'block';
-                    window.scrollTo(0, 0);
-                }
-            });
-        };
-
-        const loadUserProducts = () => {
-            onValue(ref(db, 'products'), (snapshot) => {
-                const listDiv = document.getElementById('user-product-list');
-                listDiv.innerHTML = '';
-                if (snapshot.exists()) {
-                    allProducts = snapshot.val();
-                    Object.entries(allProducts).forEach(([productId, product]) => {
-                        const colorSwatchesHTML = Object.entries(product.colors).map(([color, url]) => 
-                            `<span class="color-swatch" style="background-color: ${color.toLowerCase()};" title="${color}" data-product-id="${productId}" data-image-url="${url}"></span>`
-                        ).join('');
-
-                        const buyButtonHTML = product.buyLink 
-                            ? `<a href="${product.buyLink}" target="_blank" class="flex-1"><button class="w-full bg-green-500 text-white font-bold py-2 rounded-lg hover:bg-green-600 transition">Buy Now</button></a>`
-                            : '';
-
-                        listDiv.innerHTML += `
-                            <div class="bg-white rounded-xl shadow-md overflow-hidden product-card">
-                                <img id="img-${productId}" src="${product.defaultImage}" alt="${product.title}" class="w-full h-64 object-cover">
-                                <div class="p-4">
-                                    <h3 class="text-lg font-bold truncate">${product.title}</h3>
-                                    <p class="text-xl font-semibold text-blue-600 my-2">₹${product.price}</p>
-                                    <div class="flex items-center space-x-2 mb-4" id="swatches-${productId}">${colorSwatchesHTML}</div>
-                                    <div class="flex space-x-2">
-                                        ${buyButtonHTML}
-                                        <button data-product-id="${productId}" class="add-to-cart-btn flex-1 bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700 transition">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>`;
-                    });
-                } else {
-                    listDiv.innerHTML = '<p class="col-span-full text-center text-gray-500">No products available.</p>';
-                }
-            });
-        };
-        
-        const changeProductImage = (swatchElement, productId, imageUrl) => {
-            document.getElementById(`img-${productId}`).src = imageUrl;
-            const swatches = document.querySelectorAll(`#swatches-${productId} .color-swatch`);
-            swatches.forEach(swatch => swatch.classList.remove('selected'));
-            swatchElement.classList.add('selected');
-        };
-        
-        const addToCart = (productId) => {
-            const product = allProducts[productId];
-            const selectedColorEl = document.querySelector(`#swatches-${productId} .color-swatch.selected`);
-            const selectedColor = selectedColorEl ? selectedColorEl.title : Object.keys(product.colors)[0];
-            const cartItemId = `${productId}_${selectedColor}`;
-            const existingItem = cart.find(item => item.cartId === cartItemId);
-            if (existingItem) {
-                existingItem.quantity++;
-            } else {
-                cart.push({ cartId: cartItemId, id: productId, title: product.title, price: product.price, image: product.colors[selectedColor], color: selectedColor, quantity: 1 });
-            }
-            showToast(`${product.title} added to cart!`);
-            renderCart();
-        };
-
-        const renderCart = () => {
-            const itemsDiv = document.getElementById('cart-items');
-            itemsDiv.innerHTML = '';
-            if (cart.length === 0) {
-                document.getElementById('cart-footer').style.display = 'none';
-                document.getElementById('empty-cart-message').style.display = 'block';
-            } else {
-                document.getElementById('cart-footer').style.display = 'block';
-                document.getElementById('empty-cart-message').style.display = 'none';
-                cart.forEach(item => {
-                    itemsDiv.innerHTML += `
-                        <div class="flex items-center justify-between py-3 border-b">
-                            <img src="${item.image}" alt="${item.title}" class="w-16 h-16 object-cover rounded-md">
-                            <div class="flex-grow px-4">
-                                <p class="font-bold">${item.title}</p>
-                                <p class="text-sm text-gray-500">Color: ${item.color}</p>
-                                <p class="text-sm font-semibold">₹${item.price}</p>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <button data-cart-id="${item.cartId}" data-change="-1" class="update-quantity-btn w-7 h-7 bg-gray-200 rounded-full font-bold">-</button>
-                                <span>${item.quantity}</span>
-                                <button data-cart-id="${item.cartId}" data-change="1" class="update-quantity-btn w-7 h-7 bg-gray-200 rounded-full font-bold">+</button>
-                            </div>
-                            <button data-cart-id="${item.cartId}" class="remove-from-cart-btn ml-4 text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
-                        </div>`;
-                });
-            }
-            updateCartCountAndTotal();
-        };
-
-        const updateCartQuantity = (cartId, change) => {
-            const item = cart.find(i => i.cartId === cartId);
-            if (item) {
-                item.quantity += change;
-                if (item.quantity <= 0) {
-                    removeFromCart(cartId);
-                } else {
-                    renderCart();
-                }
-            }
-        };
-
-        const removeFromCart = (cartId) => {
-            cart = cart.filter(item => item.cartId !== cartId);
-            renderCart();
-        };
-
-        const updateCartCountAndTotal = () => {
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-            document.getElementById('cart-count').innerText = totalItems;
-            document.getElementById('cart-total').innerText = `₹${totalPrice.toFixed(2)}`;
-        };
-
-        const showCart = () => {
-            renderCart();
-            document.getElementById('cart-modal').style.display = 'flex';
-        };
-        const hideCart = () => document.getElementById('cart-modal').style.display = 'none';
-
-        const handleAuthStateChange = (user) => {
-            const authContainer = document.getElementById('user-auth-container');
-            if (user) {
-                if (window.location.hash === '#login' || window.location.hash === '') {
-                    navigate('#shop');
-                } else {
-                    router();
-                }
-                const photoURL = user.photoURL || `https://ui-avatars.com/api/?name=${user.email.split('@')[0]}&background=random`;
-                authContainer.innerHTML = `
-                    <button id="profile-button">
-                        <img src="${photoURL}" alt="Profile" class="w-10 h-10 rounded-full cursor-pointer border-2 border-transparent hover:border-blue-500">
-                    </button>
-                    <div id="profile-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-20 hidden dark:bg-gray-700">
-                        <div class="p-2 border-b">
-                            <p class="font-semibold text-sm text-gray-800 dark:text-gray-200">${user.displayName || user.email}</p>
-                        </div>
-                        <div class="p-2">
-                            <label class="flex items-center justify-between cursor-pointer">
-                                <span class="text-sm text-gray-700 dark:text-gray-200">Dark Mode</span>
-                                <div class="relative">
-                                    <input type="checkbox" id="dark-mode-toggle" class="sr-only">
-                                    <div class="block bg-gray-200 dark:bg-gray-600 w-10 h-6 rounded-full"></div>
-                                    <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full"></div>
-                                </div>
-                            </label>
-                        </div>
-                        <a href="#" id="user-logout-btn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600">Logout</a>
-                    </div>
-                `;
-                
-                document.getElementById('profile-button').addEventListener('click', () => {
-                    document.getElementById('profile-dropdown').classList.toggle('hidden');
-                });
-                document.getElementById('user-logout-btn').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    signOut(auth);
-                });
-                
-                const darkModeToggle = document.getElementById('dark-mode-toggle');
-                darkModeToggle.checked = localStorage.getItem('theme') === 'dark';
-                darkModeToggle.addEventListener('change', toggleDarkMode);
-                
-                closeUserAuthModal();
-            } else {
-                navigate('#login');
-            }
-        };
-
-        const handleGoogleLogin = () => signInWithPopup(auth, googleProvider).catch(err => showToast(err.message, true));
-        const handleEmailLogin = () => signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value).catch(err => showToast(err.message, true));
-        const handleEmailSignup = () => createUserWithEmailAndPassword(auth, document.getElementById('signup-email').value, document.getElementById('signup-password').value).catch(err => showToast(err.message, true));
-
-        const openUserAuthModal = () => document.getElementById('user-auth-modal').style.display = 'flex';
-        const closeUserAuthModal = () => document.getElementById('user-auth-modal').style.display = 'none';
-        
-        const toggleAuthViews = () => {
-            const loginView = document.getElementById('email-login-view');
-            const signupView = document.getElementById('email-signup-view');
-            loginView.style.display = loginView.style.display === 'none' ? 'block' : 'none';
-            signupView.style.display = signupView.style.display === 'none' ? 'block' : 'none';
-        };
-
-        // Policy Pages Content
-        const policyContent = {
-            about: {
-                title: 'About Us',
-                content: `<p class="mb-4">SGS STORE aapka premium quality T-shirts ke liye one-stop destination hai. Hum latest trends aur comfortable fabric ko ek saath laate hain taaki aap har din stylish dikhein aur feel karein.</p><p>Hamara mission simple hai: high-quality, fashionable T-shirts ko affordable price par provide karna.</p>`
-            },
-            privacy_policy: {
-                title: 'Privacy Policy',
-                content: `<p class="mb-4">Aapki privacy hamare liye mahatvapurna hai. Yeh policy batati hai ki hum aapki personal information kaise collect, use, aur protect karte hain.</p><h3 class="text-xl font-semibold mt-6 mb-2">Information We Collect</h3><p>Hum aapse naam, email, shipping address, aur payment details jaisi jaankari collect karte hain jab aap order place karte hain.</p><h3 class="text-xl font-semibold mt-6 mb-2">How We Use Information</h3><p>Aapki information ka istemal order process karne, customer support provide karne, aur promotional offers bhejne ke liye kiya jaata hai.</p>`
-            },
-            terms_condition: {
-                title: 'Terms & Conditions',
-                content: `<p class="mb-4">SGS STORE website ka upyog karke, aap in terms and conditions se sahmat hain. Kripya inhe dhyan se padhein.</p><h3 class="text-xl font-semibold mt-6 mb-2">Usage of Site</h3><p>Aap is site ka upyog keval lawful purposes ke liye kar sakte hain. Kisi bhi anuchit gatividhi ki anumati nahi hai.</p><h3 class="text-xl font-semibold mt-6 mb-2">Product Information</h3><p>Hum koshish karte hain ki product ki jaankari aur images aapse accurate ho, lekin halki-fulki aniyamitata ho sakti hai.</p>`
-            },
-            refund_cancellation: {
-                title: 'Refund & Cancellation Policy',
-                content: `<p class="mb-4">Hum chahte hain ki aap apni kharidari se santusht hon.</p><h3 class="text-xl font-semibold mt-6 mb-2">Cancellation</h3><p>Aap apna order shipping se pehle kabhi bhi cancel kar sakte hain. Iske liye hamare customer support se sampark karein.</p><h3 class="text-xl font-semibold mt-6 mb-2">Refund</h3><p>Agar aapko galat ya damaged product milta hai, to aap 7 dinon ke andar refund ya exchange ke liye request kar sakte hain. Product unused hona chahiye.</p>`
-            },
-            shipping: {
-                title: 'Shipping Policy',
-                content: `<p class="mb-4">Hum poore India mein apne products deliver karte hain.</p><h3 class="text-xl font-semibold mt-6 mb-2">Processing Time</h3><p>Orders aam taur par 1-2 business days mein process aur ship kiye jaate hain.</p><h3 class="text-xl font-semibold mt-6 mb-2">Delivery Time</h3><p>Delivery mein aapke location ke anusaar 5-7 business days lag sakte hain.</p>`
-            },
-            pricing: {
-                title: 'Pricing',
-                content: `<p class="mb-4">Sabhi products ke daam Indian Rupees (INR) mein diye gaye hain. Prices mein taxes shaamil ho sakte hain ya nahi, yeh product page par bataya jaayega.</p><p>Hum kisi bhi samay bina kisi poorv suchna ke daam badalne ka adhikar rakhte hain.</p>`
-            },
-            contact_us: {
-                title: 'Contact Us',
-                content: `<p class="mb-4">Aapke koi bhi sawal ya sujhav ho, to humse sampark karne mein sankoch na karein.</p><ul class="list-disc list-inside space-y-2"><li><strong>Email:</strong> <a href="mailto:sachinbusiness@gmail.com" class="text-blue-500">sachinbusiness@gmail.com</a></li><li><strong>Mobile:</strong> +91 9117080169</li></ul>`
-            },
-            disclaimer: {
-                title: 'Disclaimer',
-                content: `<p class="mb-4">Is website par di gayi jaankari keval samanya suchna ke uddeshya se hai. SGS STORE is jaankari ki purnata ya satyata ke baare mein koi warranty nahi deta hai.</p><p>Website par dikhaye gaye product colors aapke screen resolution ke kaaran vastavik product se thode alag ho sakte hain.</p>`
-            },
-            faq: {
-                title: 'Frequently Asked Questions (FAQ)',
-                content: `<div class="space-y-4"><h3 class="text-xl font-semibold">Mera order kab tak deliver hoga?</h3><p>Aam taur par, delivery mein 5-7 business days lagte hain.</p><h3 class="text-xl font-semibold mt-4">Kya main apna order cancel kar sakta hoon?</h3><p>Haan, aap shipping se pehle apna order cancel kar sakte hain.</p><h3 class="text-xl font-semibold mt-4">Payment options kya hain?</h3><p>Hum sabhi major credit/debit cards, UPI, aur net banking accept karte hain.</p></div>`
-            }
-        };
-
-        const initializeDefaultPages = async () => {
-            const pagesRef = ref(db, 'pages');
-            const snapshot = await get(pagesRef);
-            if (!snapshot.exists()) {
-                console.log("Initializing default pages in Firebase...");
-                await set(pagesRef, policyContent);
-            }
-        };
-
-        const renderPolicyPage = async (pageKey) => {
-            const container = document.getElementById('policy-pages-container');
-            const pageRef = ref(db, `pages/${pageKey}`);
-            try {
-                const snapshot = await get(pageRef);
-                if (snapshot.exists()) {
-                    const pageData = snapshot.val();
-                    container.innerHTML = `
-                        <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
-                            <h2 class="text-3xl font-bold mb-6 border-b pb-4">${pageData.title}</h2>
-                            <div class="prose dark:prose-invert max-w-none">${pageData.content}</div>
-                        </div>
-                    `;
-                } else {
-                     container.innerHTML = `<p>Content not available.</p>`;
-                }
-            } catch (error) {
-                console.error("Error fetching page content:", error);
-                container.innerHTML = `<p>Error loading content.</p>`;
-            }
-        };
-
-        const loadAdminPagesList = async () => {
-            const listContainer = document.getElementById('pages-list');
-            listContainer.innerHTML = '';
-            const pagesRef = ref(db, 'pages');
-            const snapshot = await get(pagesRef);
-            if(snapshot.exists()) {
-                const pages = snapshot.val();
-                for (const key in pages) {
-                    const page = pages[key];
-                    const button = document.createElement('button');
-                    button.className = 'w-full text-left p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-50 dark:hover:bg-gray-600';
-                    button.textContent = page.title;
-                    button.dataset.pageKey = key;
-                    button.addEventListener('click', () => openPageEditor(key));
-                    listContainer.appendChild(button);
-                }
-            }
-        };
-
-        const openPageEditor = async (pageKey) => {
-            currentPageKeyToEdit = pageKey;
-            const pageRef = ref(db, `pages/${pageKey}`);
-            const snapshot = await get(pageRef);
-            if(snapshot.exists()) {
-                const pageData = snapshot.val();
-                document.getElementById('page-editor-title').textContent = `Editing: ${pageData.title}`;
-                document.getElementById('page-editor-content').value = pageData.content;
-                document.getElementById('pages-list').style.display = 'none';
-                document.getElementById('page-editor-container').style.display = 'block';
-            }
-        };
-
-        const savePageContent = async () => {
-            if (!currentPageKeyToEdit) return;
-            const newContent = document.getElementById('page-editor-content').value;
-            const pageContentRef = ref(db, `pages/${currentPageKeyToEdit}/content`);
-            try {
-                await set(pageContentRef, newContent);
-                showToast('Page content saved successfully!');
-                document.getElementById('page-editor-container').style.display = 'none';
-                document.getElementById('pages-list').style.display = 'grid';
-                currentPageKeyToEdit = null;
-            } catch (error) {
-                showToast('Error saving content.', true);
-                console.error(error);
-            }
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            applyTheme();
-            initializeDefaultPages();
-            
-            window.addEventListener('popstate', router);
-            router(); 
-
-            document.getElementById('initial-google-login-btn').addEventListener('click', handleGoogleLogin);
-            document.getElementById('login-with-email-link').addEventListener('click', (e) => {
-                e.preventDefault();
-                openUserAuthModal();
-            });
-            
-            document.getElementById('toggle-admin-login-btn').addEventListener('click', (e) => {
-                e.preventDefault();
-                document.getElementById('admin-login-dropdown').classList.toggle('show');
-            });
-            
-            document.getElementById('admin-login-btn').addEventListener('click', handleAdminLogin);
-            document.getElementById('show-add-product-form-btn').addEventListener('click', () => {
-                document.getElementById('product-management-container').style.display = 'block';
-                document.getElementById('page-management-container').style.display = 'none';
-            });
-            document.getElementById('manage-pages-btn').addEventListener('click', () => {
-                document.getElementById('product-management-container').style.display = 'none';
-                document.getElementById('page-management-container').style.display = 'block';
-                loadAdminPagesList();
-            });
-            document.getElementById('back-to-products-btn').addEventListener('click', () => {
-                document.getElementById('product-management-container').style.display = 'block';
-                document.getElementById('page-management-container').style.display = 'none';
-            });
-            document.getElementById('save-page-content-btn').addEventListener('click', savePageContent);
-            document.getElementById('cancel-page-edit-btn').addEventListener('click', () => {
-                document.getElementById('page-editor-container').style.display = 'none';
-                document.getElementById('pages-list').style.display = 'grid';
-            });
-
-            document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
-            document.getElementById('add-color-btn').addEventListener('click', addColorInput);
-            document.getElementById('cancel-product-form-btn').addEventListener('click', hideProductForm);
-            document.getElementById('header-title').addEventListener('click', () => navigate('#shop'));
-            document.getElementById('show-cart-btn').addEventListener('click', showCart);
-            document.getElementById('close-auth-modal-btn').addEventListener('click', closeUserAuthModal);
-            document.getElementById('goto-signup-link').addEventListener('click', toggleAuthViews);
-            document.getElementById('goto-login-link').addEventListener('click', toggleAuthViews);
-            document.getElementById('email-login-btn').addEventListener('click', handleEmailLogin);
-            document.getElementById('email-signup-btn').addEventListener('click', handleEmailSignup);
-            document.getElementById('google-login-btn').addEventListener('click', handleGoogleLogin);
-            document.getElementById('apple-login-btn').addEventListener('click', () => showToast('Apple login is not configured.', true));
-            document.getElementById('hide-cart-btn').addEventListener('click', hideCart);
-            document.getElementById('product-form').addEventListener('submit', handleProductFormSubmit);
-            
-            const sidebar = document.getElementById('sidebar');
-            const sidebarOverlay = document.getElementById('sidebar-overlay');
-            const openSidebarBtn = document.getElementById('open-sidebar-btn');
-            const closeSidebarBtn = document.getElementById('close-sidebar-btn');
-
-            const toggleSidebar = () => {
-                sidebar.classList.toggle('open');
-                sidebarOverlay.classList.toggle('hidden');
-            };
-
-            openSidebarBtn.addEventListener('click', toggleSidebar);
-            closeSidebarBtn.addEventListener('click', toggleSidebar);
-            sidebarOverlay.addEventListener('click', toggleSidebar);
-
-            document.querySelectorAll('.sidebar-link').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const path = e.target.getAttribute('href');
-                    navigate(path);
-                    toggleSidebar();
-                });
-            });
-            
-            document.body.addEventListener('click', (e) => {
-                if (e.target.closest('.remove-color-btn')) {
-                    e.target.closest('.remove-color-btn').parentElement.parentElement.remove();
-                }
-                if (e.target.closest('.edit-product-btn')) {
-                    editProduct(e.target.closest('.edit-product-btn').dataset.id);
-                }
-                if (e.target.closest('.delete-product-btn')) {
-                    deleteProduct(e.target.closest('.delete-product-btn').dataset.id);
-                }
-                if (e.target.closest('.add-to-cart-btn')) {
-                    addToCart(e.target.closest('.add-to-cart-btn').dataset.productId);
-                }
-                if (e.target.closest('.color-swatch')) {
-                    const swatch = e.target.closest('.color-swatch');
-                    changeProductImage(swatch, swatch.dataset.productId, swatch.dataset.imageUrl);
-                }
-                if (e.target.closest('.update-quantity-btn')) {
-                    const btn = e.target.closest('.update-quantity-btn');
-                    updateCartQuantity(btn.dataset.cartId, parseInt(btn.dataset.change));
-                }
-                if (e.target.closest('.remove-from-cart-btn')) {
-                    removeFromCart(e.target.closest('.remove-from-cart-btn').dataset.cartId);
-                }
-                const profileDropdown = document.getElementById('profile-dropdown');
-                if (profileDropdown && !profileDropdown.classList.contains('hidden') && !e.target.closest('#user-auth-container')) {
-                    profileDropdown.classList.add('hidden');
-                }
-            });
-
-            onAuthStateChanged(auth, handleAuthStateChange);
-        });
-    </script>
 </body>
 </html>
